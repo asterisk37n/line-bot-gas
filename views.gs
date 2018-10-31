@@ -37,9 +37,11 @@ function generateQuickReplyTopMessage() {
 // --------
 
 function generateQuickReplyReservationMessage() {
-  var initialDatetime = new Date().toISOString();
+
+  // Add nine hours because ISO timezone is always zero offset to UTC as denoted by the suffix "Z"
+  var initialDatetime = new Date().addHours(9).toISOString();
   var initialDatetimeString = initialDatetime.substring(0, initialDatetime.length - 8);
-  var maxDatetime = new Date().addHours(24 * 14).toISOString();
+  var maxDatetime = new Date().addHours(9 + 24 * 14).toISOString();
   var maxDatetimeString = maxDatetime.substring(0, maxDatetime.length - 8);
 
   return {
@@ -107,6 +109,14 @@ function generateMessageForReservationByDatetimePicker(event) {
   var reservation_datetime = new Date(event.postback.params.datetime);
   var counted = reservation.countReservation(new Date(), null);
   var messages = [];
+  
+  if (!isValidReservationDatetime(reservation_datetime)) {
+    return {
+      type: "text",
+      text: toJapaneseDate(reservation_datetime) + "は予約を受け付けていない時間です."
+    }
+  }
+  
   if (counted.hasOwnProperty(reservation_datetime) && counted[reservation_datetime] >= 6) {
     return {
       type: "text",
