@@ -1,1 +1,1 @@
-1f
+var CHANNEL_ACCESS_TOKEN = 'xxx';
