@@ -107,14 +107,14 @@ function generateMessageForReservationByDatetimePicker(event) {
   var reservationDatetime = new Date(event.postback.params.datetime);
   var counted = reservation.countReservation(new Date(), null);
   var messages = [];
-  
+
   if (!isValidReservationDatetime(reservationDatetime)) {
     return {
       type: "text",
       text: reservationDatetime.toJPString() + "は予約を受け付けていない時間です."
     }
   }
-  
+
   if (counted.hasOwnProperty(reservationDatetime) && counted[reservationDatetime] >= 6) {
     return {
       type: "text",
@@ -377,7 +377,7 @@ function generateMessageForReadAllReservation() {
 
   function convertArrToButtons(arr) {
     var contents = arr.map(function(row) {
-    var JPString = new Date(parseInt(row[0])).toJPString();
+      var JPString = new Date(parseInt(row[0])).toJPString();
       return {
         type: "button",
         style: "link",
@@ -475,21 +475,24 @@ function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
   var userToCount = null;
   var date = new Date();
   var latestMonth = date.getMonth() + 1;
-  
+
   // Latest month
   var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+  var lastDay  = new Date(date.getFullYear(), date.getMonth() + 1, 1);
   var countsThisMonth = training.count(userToCount, firstDay, lastDay);
-  
+
   // Previous month
   var prevMonth = latestMonth - 1;
   var firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
-  var lastDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  var lastDay  = new Date(date.getFullYear(), date.getMonth(), 1);
   var countsPrevMonth = training.count(userToCount, firstDay, lastDay);
 
   function convertArrToButtons(arr) {
     if (arr.length === 0) {
-      return [{type: "text", text: "まだ記録がありません."}];
+      return [{
+        type: "text",
+        text: "まだ記録がありません."
+      }];
     }
     var contents = arr.map(function(row) {
       var name = getProfile(row[0], CHANNEL_ACCESS_TOKEN).displayName;
@@ -512,8 +515,6 @@ function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
 
   var latestButtons = convertArrToButtons(countsThisMonth);
   var prevButtons = convertArrToButtons(countsPrevMonth);
-  
-  console.log(latestButtons);
 
   return {
     type: "flex",
