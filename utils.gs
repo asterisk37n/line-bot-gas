@@ -8,7 +8,7 @@ function toJapaneseDate(date, show_time) {
 
   var result = "%Y-%m-%d(%a) %h:%M";
   var weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-  var result = result.replace('%Y-', '')
+  result = result.replace('%Y-', '')
     .replace("%m", ("00" + (date.getMonth() + 1).toString()).slice(-2))
     .replace("%d", ("00" + date.getDate().toString()).slice(-2))
     .replace("%a", weekdays[date.getDay()]);
@@ -22,13 +22,11 @@ function toJapaneseDate(date, show_time) {
   return result;
 }
 
-
 function toUniqueArray(arrArg) {
   return arrArg.filter(function(elem, pos, arr) {
     return arr.indexOf(elem) == pos;
   });
 };
-
 
 var closestDate = {
   monday: function() {
@@ -58,4 +56,25 @@ Date.prototype.toLINEString = function() {
   var japString = this.addHours(9).toISOString();
   var lineString = japString.substring(0, japString.length - 8);
   return lineString;
+}
+
+Date.prototype.toJPString = function(includeTime) {
+  if (typeof includeTime === "undefined") {
+    includeTime = true;
+  }
+  var result = "%Y-%m-%d(%a) %h:%M";
+  var weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  result = result.replace('%Y-', '')
+    .replace("%m", ("00" + (this.getMonth() + 1).toString()).slice(-2))
+    .replace("%d", ("00" + this.getDate().toString()).slice(-2))
+    .replace("%a", weekdays[this.getDay()]);
+  if (includeTime) {
+    result = result.replace("%h", ("00" + this.getHours().toString()).slice(-2))
+      .replace("%M", ("00" + this.getMinutes().toString()).slice(-2));
+  } else {
+    result = result.replace(" %h:%M", "");
+  }
+
+  result = result.replace(/^\s*|\s*$/g, "");
+  return result;
 }

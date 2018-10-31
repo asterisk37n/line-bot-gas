@@ -148,8 +148,10 @@ function doPost(e) {
     }
     console.log(contents.events[i]);
   }
+  
+  // --------
+  // Below code is legacy and is supposed to be deleted someday.
 
-  var user_message = '';
   return;
   if (user_message.match(/^予約作成$/)) {
     var monday = closestDate.monday();
