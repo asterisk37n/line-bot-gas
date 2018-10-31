@@ -7,10 +7,18 @@ function doGet(e) {
 function generateMessageToTextMessage(event) {
   var userMessage = event.message.text;
   userMessage = userMessage.replace(/　/g, " "); // replace full-width space with half-width space
-  if (userMessage.match(/^.+$/)) {
+  if (userMessage.match(/よく生きるとは/)) {
+    return {
+      type: "text",
+      text: "「よく生きる」とは「幸福に生きる」ことではないことを知ること、それが決定的に重要なのだ。"
+    };
+    
+  } else if (userMessage.match(/^(admin|root|管理|全員|管理者)$/)) {
+    return generateQuickReplyAdminMessage();
+    
+  } else if (userMessage.match(/^.+$/)) {
     return generateQuickReplyTopMessage();
   }
-  return {};
 }
 
 function generateMessagesToMessageEvent(event) {
@@ -129,28 +137,6 @@ function doPost(e) {
       }
     console.log(contents.events[i]);
   }
-  
-  var reply_token = contents.events[0].replyToken;
-
-  var user_message = "";
-  var message_id = '';
-  var data = {};
-
-  if (contents.events[0].type == "postback") {
-    console.log(contents.events[0].postback.data);
-    data = JSON.parse(contents.events[0].postback.data);
-    console.log(data);
-  } else if (contents.events[0].type == "message") {
-    var messageId = contents.events[0].message.id;
-    var message_type = contents.events[0].message.type;
-    if (message_type === "text") {
-      user_message = contents.events[0].message.text;
-    } else if (message_type === "video") {}
-  }
-  user_message = user_message.replace(/　/g, " "); // replace full-width space with half-width space
-
-  var messages;
-  var userId = contents.events[0].source.userId;
 
   if (user_message.match(/^予約作成$/)) {
     var monday = closestDate.monday();
@@ -421,22 +407,6 @@ function doPost(e) {
     messages = [{
       type: "text",
       text: toJapaneseDate(new Date(data.timestamp), true) + "\n"  + users.join('\n')
-    }]
-  } else if (user_message.match(/^(help|ヘルプ|へるぷ|使い方)$/)) {
-    messages = [{
-      type: "text",
-      text: "<コマンド一覧>\n予約作成: 直近の予約を行います\n予約確認: 自身の予約を確認\n予約削除: 自身の予約を削除\nカウント: 自身のトレーニング回数のカウント\nカウント 先月: 自身の先月のトレーニング回数のカウント\nヘルプ: 上記コマンドを参照\n\nのいずれかを入力してください.\n" +
-        "また、動画を投稿するとトレーニング回数をカウントします。\n改善後の仕様としては、名前を登録する手間が省けました"
-    }]
-  } else if (user_message.match(/よく生きるとは/)) {
-    messages = [{
-      type: "text",
-      text: "「よく生きる」とは「幸福に生きる」ことではないことを知ること、それが決定的に重要なのだ。"
-    }]
-  } else if (user_message.match(/幸福とは/)) {
-    messages = [{
-      type: "text",
-      text: "幸福とは、思考の停止であり、視野の切り捨てであり、感受性の麻痺である。つまり、大いなる錯覚である。世の中には、この錯覚に陥っている人と、陥りたいと願う人と、陥ることができなくてもがいている人と、陥ることをあきらめている人がいる。ただそれだけである。"
     }]
   }
 

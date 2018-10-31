@@ -32,6 +32,10 @@ function generateQuickReplyTopMessage() {
   }
 }
 
+// --------
+// Reservation Views
+// --------
+
 function generateQuickReplyReservationMessage() {
   return {
     type: "text",
@@ -177,6 +181,10 @@ function generateMessageForDeleteReservationConfirmation(event, getProfile, CHAN
   };
 }
 
+// --------
+// Workout Views
+// --------
+
 function generateQuickReplyWorkoutMessage() {
   return {
     type: "text",
@@ -292,4 +300,54 @@ function generateWelcomeMessage(){
     "あまり無断キャンセルが多いとこちらも対応を考えないといけなくなります。\n" +
     "一方で、すぐに埋まるような現状が続きましたらクラス増設を検討いたします。一般的に皆様が夜これるであろう19−23時ごろまでは行うつもりです。"
   };
+}
+
+// --------
+// Administrator Views
+// --------
+
+function generateQuickReplyAdminMessage(){
+  return {
+    type: "text",
+    text: "管理者用メニューを選んでください",
+    quickReply: {
+      items: [{
+          type: "action",
+          imageUrl: "https://www.newsclick.in/sites/default/files/2018-03/rese12.jpg",
+          action: {
+            type: "postback",
+            label: "全員の予約を表示",
+            displayText: "全員の予約を表示",
+            data: JSON.stringify({
+              state: "ADMIN_RESERVATION_READ"
+            })
+          }
+        },
+        {
+          type: "action",
+          imageUrl: "https://content.active.com/Assets/Active.com+Content+Site+Digital+Assets/Fitness/580x350/Push-Up.jpg",
+          action: {
+            type: "postback",
+            label: "今月の全員の筋トレ回数を表示",
+            displayText: "今月の全員の筋トレ回数を表示",
+            data: JSON.stringify({
+              state: "ADMIN_WORKOUT_COUNT_THIS_MONTH"
+            })
+          }
+        },
+        {
+          type: "action",
+          imageUrl: "https://content.active.com/Assets/Active.com+Content+Site+Digital+Assets/Fitness/580x350/Push-Up.jpg",
+          action: {
+            type: "postback",
+            label: "先月の全員の筋トレ回数を表示",
+            displayText: "先月の全員の筋トレ回数を表示",
+            data: JSON.stringify({
+              state: "ADMIN_WORKOUT_COUNT_LAST_MONTH"
+            })
+          }
+        }
+      ]
+    }
+  }
 }
