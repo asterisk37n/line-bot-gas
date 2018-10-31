@@ -346,8 +346,93 @@ function generateQuickReplyAdminMessage(){
               state: "ADMIN_WORKOUT_COUNT_LAST_MONTH"
             })
           }
+        },
+        {
+          type: "action",
+          imageUrl: "https://pickup.cinemacafe.net/uploads/article/image/1906/card_haul.jpg",
+          action: {
+            type: "postback",
+            label: "最初に戻る",
+            displayText: "最初に戻る",
+            data: JSON.stringify({
+              state: "ROOT"
+            })
+          }
         }
       ]
     }
   }
+}
+
+function generateMessageForReadAllReservation() {
+  var contents = [];
+  var date = new Date();
+  var firstDayOfPreviousMonth = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+  var firstDayOfThisMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+
+  var countsPrevious = reservation.countReservation(firstDayOfPreviousMonth, firstDayOfThisMonth);
+  var countsThis = reservation.countReservation(firstDayOfThisMonth, null);
+
+  var countsPrevious = Object.keys(countsPrevious).map(function(key) {
+    return [Number(key), countsPrevious[key]];
+  });
+
+  var countsThis = Object.keys(countsThis).map(function(key) {
+    return [Number(key), countsThis[key]];
+  });
+
+  var contentsPrevious = countsPrevious.map(function(row) {
+    return {
+      type: "button",
+      style: "link",
+      action: {
+        type: "postback",
+        label: toJapaneseDate(new Date(parseInt(row[0])), true) + " " + row[1] + "人",
+        displayText: toJapaneseDate(new Date(parseInt(row[0])), false),
+        data: JSON.stringify({
+          state: "RESERVATION_RETRIEVE",
+          timestamp: parseInt(row[0])
+        })
+      }
+    }
+  });
+
+  var contentsThis = countsThis.map(function(row) {
+    return {
+      type: "button",
+      style: "link",
+      action: {
+        type: "postback",
+        label: toJapaneseDate(new Date(parseInt(row[0])), true) + " " + row[1] + "人",
+        displayText: toJapaneseDate(new Date(parseInt(row[0])), false),
+        data: JSON.stringify({
+          state: "RESERVATION_RETRIEVE",
+          timestamp: parseInt(row[0])
+        })
+      }
+    }
+  });
+
+  return {
+    "type": "flex",
+    "altText": "This is a Flex Message",
+    "contents": {
+      "type": "carousel",
+      "contents": [{
+        "type": "bubble",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": contentsThis
+        }
+      }, {
+        "type": "bubble",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": contentsPrevious
+        }
+      }]
+    }
+  };
 }

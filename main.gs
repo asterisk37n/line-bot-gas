@@ -13,7 +13,7 @@ function generateMessageToTextMessage(event) {
       text: "「よく生きる」とは「幸福に生きる」ことではないことを知ること、それが決定的に重要なのだ。"
     };
     
-  } else if (userMessage.match(/^(admin|root|管理|全員|管理者)$/)) {
+  } else if (userMessage.match(/^(admin|Admin|ADMIN|root|Root|ROOT|管理|全員|管理者)$/)) {
     return generateQuickReplyAdminMessage();
     
   } else if (userMessage.match(/^.+$/)) {
@@ -96,6 +96,9 @@ function generateMessagesToPostbackEvent(event) {
     var quickReplyWorkoutMessage = generateQuickReplyWorkoutMessage();
     messages.push(quickReplyWorkoutMessage);
     
+  } else if (data.state === "ADMIN_RESERVATION_READ") {
+    messages.push(generateMessageForReadAllReservation());
+    messages.push(generateQuickReplyAdminMessage());
   }
   
   return messages;
@@ -138,6 +141,7 @@ function doPost(e) {
     console.log(contents.events[i]);
   }
 
+  var user_message = '';
   if (user_message.match(/^予約作成$/)) {
     var monday = closestDate.monday();
     var thursday = closestDate.thursday();
