@@ -8,7 +8,6 @@ function toJapaneseDate(date, show_time) {
   
   var result = "%Y-%m-%d(%a) %h:%M";
   var weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-//  var result = result.replace('%Y', date.getFullYear().toString()) Strip year as LINE assumes dddd-dd-dd as TEL number
   var result = result.replace('%Y-', '')
     .replace("%m", ("00" + (date.getMonth() + 1).toString()).slice(-2))
     .replace("%d", ("00" + date.getDate().toString()).slice(-2))
