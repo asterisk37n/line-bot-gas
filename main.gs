@@ -6,6 +6,7 @@ function doGet(e) {
 
 function generateMessageToTextMessage(event) {
   var userMessage = event.message.text;
+  userMessage = userMessage.replace(/　/g, " "); // replace full-width space with half-width space
   if (userMessage.match(/^.+$/)) {
     return generateQuickReplyTopMessage();
   }
@@ -103,18 +104,21 @@ function doPost(e) {
       var messages = [];
       
       if (event.type === "message") {
-        messages = generateMessagesToMessageEvent(event);
+        messages = messages.concat(generateMessagesToMessageEvent(event));
       
       } else if (event.type === "follow") {
       
       } else if (event.type === "unfollow") {
       
       } else if (event.type === "join") {
+        messages.push(generateWelcomeMessage());
+        messages.push(generateQuickReplyTopMessage());
       
       } else if (event.type === "leave") {
       
       } else if (event.type === "postback") {
         messages = generateMessagesToPostbackEvent(event);
+        
       } else if (event.type === "beacon") {
       
       } else if (event.type === "accountLink") {
@@ -125,8 +129,6 @@ function doPost(e) {
       }
     console.log(contents.events[i]);
   }
-  
-
   
   var reply_token = contents.events[0].replyToken;
 
@@ -420,47 +422,6 @@ function doPost(e) {
       type: "text",
       text: toJapaneseDate(new Date(data.timestamp), true) + "\n"  + users.join('\n')
     }]
-
-  } else if (contents.events[0].type === "join") {
-    messages = [];
-    messages.push({
-      type: "text",
-      text: "＜予約ルールについて＞\nバディトレは少人数制ワークアウトに伴い、以前からテスト運用をしていたbotをより簡素化して、LINE上で使えるようにいたしました。"
-    })
-    messages.push({
-      type: "text",
-      text: "<コマンド一覧>\n予約作成: 直近の予約を行います\n予約確認: 自身の予約を確認\n予約削除: 自身の予約を削除\nカウント: 自身のトレーニング回数のカウント\nカウント 先月: 自身の先月のトレーニング回数のカウント\nヘルプ: 上記コマンドを参照\n\nのいずれかを入力してください.\n" +
-        "また、動画を投稿するとトレーニング回数をカウントします。\n改善後の仕様としては、名前を登録する手間が省けました"
-    })
-    messages.push({
-      type: "text",
-      text: "＜カウントについて＞\n" +
-        "バディトレでは、\n" +
-        "・自身でトレーニングした際に動画をアップ\n" +
-        "・バディトレに来た際にトレーニング動画をアップ\n" +
-        "条件は1秒以上の動画であれば特に指定はありません。\n" +
-        "30分以上の高い強度でのトレーニングをさします。\n" +
-        "したがいまして、他の目的で動画をアップすることはお控えください。\n" +
-        "その際に、過去の名将やボディビルダーの名言とともに、botが記憶します。\n" +
-        "名言は単に意識が高くなるだけで、特に深い意味はありません笑 我々なりのユーモアです。\n" +
-        "毎月トップの方にはプロテインか「燃え燃え」、そして２位の方にはBCAAをプレゼントします。botにデザイン変更してあります。\n" +
-        "上記のコマンドを忘れてしまった時は\n" +
-        "ヘルプ\n" +
-        "と入力していただくことで、一覧が出ます。"
-    })
-    messages.push({
-      type: "text",
-      text: "＜キャンセルについて＞\n" +
-        "今後は６人限定ということでこれまでテスト運用していたbotはしっかり運用してまいります。なお、最初は少々紛らわしかとは思いますが、６人を超えると予約ができなくなります。\n" +
-        "ですので、キャンセルコマンドも用意しましたので、いけない場合は1時間前を目安にご連絡ください。\n" +
-        "あまり無断キャンセルが多いとこちらも対応を考えないといけなくなります。\n" +
-        "一方で、すぐに埋まるような現状が続きましたらクラス増設を検討いたします。一般的に皆様が夜これるであろう19−23時ごろまでは行うつもりです。"
-    })
-    //    messages.push({
-    //      type: "text",
-    //      text: JSON.stringify(e, null, 2)
-    //    });
-
   } else if (user_message.match(/^(help|ヘルプ|へるぷ|使い方)$/)) {
     messages = [{
       type: "text",
@@ -477,57 +438,8 @@ function doPost(e) {
       type: "text",
       text: "幸福とは、思考の停止であり、視野の切り捨てであり、感受性の麻痺である。つまり、大いなる錯覚である。世の中には、この錯覚に陥っている人と、陥りたいと願う人と、陥ることができなくてもがいている人と、陥ることをあきらめている人がいる。ただそれだけである。"
     }]
-  } else if (user_message.match(/くいっく/)){
-
-    
-  } else if (user_message.match(/予約123/)) {
-    messages = [
-      {
-        "type": "text", // ①
-        "text": "Select your favorite food category or send me your location!",
-        "quickReply": { // ②
-          "items": [
-            {
-              "type": "action", // ③
-              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Various_sushi%2C_beautiful_October_night_at_midnight.jpg/1200px-Various_sushi%2C_beautiful_October_night_at_midnight.jpg",
-              "action": {
-                "type": "message",
-                "label": "メニューに戻る",
-                "text": "くいっく"
-              }
-            },
-            {
-              "type": "action",
-              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Various_sushi%2C_beautiful_October_night_at_midnight.jpg/1200px-Various_sushi%2C_beautiful_October_night_at_midnight.jpg",
-              "action": {  
-                "type":"datetimepicker",
-                "label":"開始日時を選ぶ",
-                "data":JSON.stringify({"state":"CREATE_RESERVATION"}),
-                "mode":"datetime",
-                "initial":"2017-12-25t00:00",
-                "max":"2019-01-24t23:59",
-                "min":"2017-12-25t00:00"
-              }
-            },
-            {
-              "type": "action", // ④
-              "action": {
-                "type": "location",
-                "label": "Send location"
-              }
-            }
-          ]
-        }
-      }
-    ]
-  } else if (contents.events[0].type == "postback" && data.state == "CREATE_RESERVATION") {
-    console.log(contents.events[0].postback.params);
   }
 
-  console.log({
-    reply_token: reply_token,
-    messages: messages
-  });
   if (!messages) return;
   UrlFetchApp.fetch(line_endpoint, {
     'headers': {
