@@ -39,7 +39,7 @@ function generateQuickReplyReservationMessage() {
     quickReply: {
       items: [{
           type: "action",
-          imageUrl: "https://cdn5.vectorstock.com/i/1000x1000/90/64/the-pen-icon-fountain-pen-symbol-flat-vector-5429064.jpg",
+          imageUrl: "https://upload.wikimedia.org/wikipedia/en/8/86/Modern-ftn-pen-cursive.jpg",
           action: {
             type: "datetimepicker",
             label: "新規予約",
@@ -54,7 +54,7 @@ function generateQuickReplyReservationMessage() {
         },
         {
           type: "action",
-          imageUrl: "https://image.freepik.com/free-icon/calendar-interface-symbol-tool_318-58214.jpg",
+          imageUrl: "https://techflourish.com/images/clipart-calendar-august-2015-22.jpg",
           action: {
             type: "postback",
             label: "予約確認",
@@ -66,7 +66,7 @@ function generateQuickReplyReservationMessage() {
         },
         {
           type: "action",
-          imageUrl: "https://image.freepik.com/free-icon/trash-bin-symbol_318-10194.jpg",
+          imageUrl: "https://vignette.wikia.nocookie.net/oscarthegrouch/images/b/be/Trash_Can.jpg/revision/latest?cb=20120928224249",
           action: {
             type: "postback",
             label: "予約削除",
@@ -78,7 +78,7 @@ function generateQuickReplyReservationMessage() {
         },
         {
           type: "action",
-          imageUrl: "https://image.freepik.com/free-icon/home_318-42210.jpg",
+          imageUrl: "https://pickup.cinemacafe.net/uploads/article/image/1906/card_haul.jpg",
           action: {
             type: "postback",
             label: "最初に戻る",
@@ -184,7 +184,7 @@ function generateQuickReplyWorkoutMessage() {
     quickReply: {
       items: [{
           type: "action",
-          imageUrl: "https://cdn5.vectorstock.com/i/1000x1000/90/64/the-pen-icon-fountain-pen-symbol-flat-vector-5429064.jpg",
+          imageUrl: "https://us.123rf.com/450wm/newartgraphics/newartgraphics1402/newartgraphics140200108/26170093-red-round-speech-bubble-with-video-icon.jpg?ver=6",
           action: {
             type: "camera",
             label: "トレーニング回数追加",
@@ -192,7 +192,7 @@ function generateQuickReplyWorkoutMessage() {
         },
         {
           type: "action",
-          imageUrl: "https://image.freepik.com/free-icon/calendar-interface-symbol-tool_318-58214.jpg",
+          imageUrl: "https://is5-ssl.mzstatic.com/image/thumb/Purple118/v4/c5/82/c4/c582c405-d78a-ba21-795d-560f19fef45a/AppIcon-1x_U007emarketing-85-220-0-6.png/246x0w.jpg",
           action: {
             type: "postback",
             label: "回数確認",
@@ -204,7 +204,7 @@ function generateQuickReplyWorkoutMessage() {
         },
         {
           type: "action",
-          imageUrl: "https://image.freepik.com/free-icon/home_318-42210.jpg",
+          imageUrl: "https://pickup.cinemacafe.net/uploads/article/image/1906/card_haul.jpg",
           action: {
             type: "postback",
             label: "最初に戻る",
