@@ -12,10 +12,10 @@ function generateMessageToTextMessage(event) {
       type: "text",
       text: "「よく生きる」とは「幸福に生きる」ことではないことを知ること、それが決定的に重要なのだ。"
     };
-    
+
   } else if (userMessage.match(/^(admin|Admin|ADMIN|root|Root|ROOT|管理|全員|管理者)$/)) {
     return generateQuickReplyAdminMessage();
-    
+
   } else if (userMessage.match(/^.+$/)) {
     return generateQuickReplyTopMessage();
   }
@@ -33,24 +33,24 @@ function generateMessagesToMessageEvent(event) {
       messages.push(message);
     }
   } else if (messageType === "image") {
-  
+
   } else if (messageType === "video") {
     messages.push(generateMessageForAddWorkout(event));
     var maximMessage = generateMessageForRandomMaxim();
     messages.push(maximMessage);
     var quickReplyWorkoutMessage = generateQuickReplyWorkoutMessage();
     messages.push(quickReplyWorkoutMessage);
-  
+
   } else if (messageType === "audio") {
-  
+
   } else if (messageType === "file") {
-  
+
   } else if (messageType === "location") {
-  
+
   } else if (messageType === "sticker") {
-  
+
   }
- return messages;
+  return messages;
 }
 
 function generateMessagesToPostbackEvent(event) {
@@ -58,44 +58,44 @@ function generateMessagesToPostbackEvent(event) {
   var data = JSON.parse(event.postback.data);
   var messages = [];
   var data = JSON.parse(event.postback.data);
-  
+
   if (data.state === "ROOT") {
     var quickReplyTopMessage = generateQuickReplyTopMessage();
     messages.push(quickReplyTopMessage);
-    
+
   } else if (data.state === 'RESERVATION') {
     var quickReplyReservationMessage = generateQuickReplyReservationMessage();
     messages.push(quickReplyReservationMessage);
-    
+
   } else if (data.state === "RESERVATION_CREATE_CONFIRMATION") {
     messages.push(generateMessageForReservationByDatetimePicker(event));
     var quickReplyReservationMessage = generateQuickReplyReservationMessage();
     messages.push(quickReplyReservationMessage);
-    
+
   } else if (data.state === "RESERVATION_READ") {
     messages.push(generateMessageForReadReservation(event, getProfile, CHANNEL_ACCESS_TOKEN));
     var quickReplyReservationMessage = generateQuickReplyReservationMessage();
     messages.push(quickReplyReservationMessage);
-    
+
   } else if (data.state === "RESERVATION_DELETE") {
     messages.push(generateMessageForDeleteReservation(event));
     var quickReplyReservationMessage = generateQuickReplyReservationMessage();
     messages.push(quickReplyReservationMessage);
-    
+
   } else if (data.state === "RESERVATION_DELETE_CONFIRMATION") {
     messages.push(generateMessageForDeleteReservationConfirmation(event, getProfile, CHANNEL_ACCESS_TOKEN));
     var quickReplyReservationMessage = generateQuickReplyReservationMessage();
     messages.push(quickReplyReservationMessage);
-    
+
   } else if (data.state === "WORKOUT") {
     var quickReplyWorkoutMessage = generateQuickReplyWorkoutMessage();
     messages.push(quickReplyWorkoutMessage);
-    
+
   } else if (data.state === "WORKOUT_COUNT") {
     messages.push(generateMessageForCountWorkout(event, getProfile, CHANNEL_ACCESS_TOKEN));
     var quickReplyWorkoutMessage = generateQuickReplyWorkoutMessage();
     messages.push(quickReplyWorkoutMessage);
-    
+
   } else if (data.state === "ADMIN_RESERVATION_READ") {
     messages.push(generateMessageForReadAllReservation());
     messages.push(generateQuickReplyAdminMessage());
@@ -103,12 +103,12 @@ function generateMessagesToPostbackEvent(event) {
   } else if (data.state === "RESERVATION_RETRIEVE") {
     messages.push(generateMessageForRetrieveReservation(event, getProfile, CHANNEL_ACCESS_TOKEN));
     messages.push(generateQuickReplyAdminMessage());
-  
+
   } else if (data.state === "ADMIN_WORKOUT_COUNT") {
     messages.push(generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN));
     messages.push(generateQuickReplyAdminMessage());
   }
-  
+
   return messages;
 }
 
@@ -118,34 +118,34 @@ function doPost(e) {
   var events = contents.events;
 
   for (var i = 0; i < events.length; i++) {
-      var event = events[i];
-      var reply_token = event.replyToken;
-      var messages = [];
-      
-      if (event.type === "message") {
-        messages = messages.concat(generateMessagesToMessageEvent(event));
-      
-      } else if (event.type === "follow") {
-      
-      } else if (event.type === "unfollow") {
-      
-      } else if (event.type === "join") {
-        messages.push(generateWelcomeMessage());
-        messages.push(generateQuickReplyTopMessage());
-      
-      } else if (event.type === "leave") {
-      
-      } else if (event.type === "postback") {
-        messages = generateMessagesToPostbackEvent(event);
-        
-      } else if (event.type === "beacon") {
-      
-      } else if (event.type === "accountLink") {
-      
-      }
-      if (messages.length) {
-        replyMessages(messages, reply_token);
-      }
+    var event = events[i];
+    var reply_token = event.replyToken;
+    var messages = [];
+
+    if (event.type === "message") {
+      messages = messages.concat(generateMessagesToMessageEvent(event));
+
+    } else if (event.type === "follow") {
+
+    } else if (event.type === "unfollow") {
+
+    } else if (event.type === "join") {
+      messages.push(generateWelcomeMessage());
+      messages.push(generateQuickReplyTopMessage());
+
+    } else if (event.type === "leave") {
+
+    } else if (event.type === "postback") {
+      messages = generateMessagesToPostbackEvent(event);
+
+    } else if (event.type === "beacon") {
+
+    } else if (event.type === "accountLink") {
+
+    }
+    if (messages.length) {
+      replyMessages(messages, reply_token);
+    }
     console.log(contents.events[i]);
   }
 
@@ -364,13 +364,13 @@ function doPost(e) {
     console.log(data.timestamp);
     var res = reservation.retrieve(data.timestamp);
     var userIds = res.userIds;
-    var users = userIds.map(function(userId){
+    var users = userIds.map(function(userId) {
       return getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName
     });
 
     messages = [{
       type: "text",
-      text: toJapaneseDate(new Date(data.timestamp), true) + "\n"  + users.join('\n')
+      text: toJapaneseDate(new Date(data.timestamp), true) + "\n" + users.join('\n')
     }]
   }
 
