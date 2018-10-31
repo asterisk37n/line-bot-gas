@@ -39,7 +39,7 @@ function getGoogleCalendarLink(datetime) {
     '&text=' + encodeURIComponent('バディトレ') +
     '&details=' + encodeURIComponent('') +
     '&location=' + encodeURIComponent('') +
-    '&dates=' + getUTC(datetime) + '/' + getUTC(datetime.addHours(1.5)) +
+    '&dates=' + getUTC(datetime) + '/' + getUTC(datetime.addHours(1)) +
     '&trp=' + 'false' +
     '&sprop=' + encodeURIComponent('リンク設置元のURL') +
     '&sprop=' + 'name:' + encodeURIComponent('LINE bot');
