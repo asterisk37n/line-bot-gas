@@ -1,1 +1,1 @@
-var CHANNEL_ACCESS_TOKEN = 'xxx';
+//var CHANNEL_ACCESS_TOKEN = 'xxx';
