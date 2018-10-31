@@ -5,7 +5,7 @@ function toJapaneseDate(date, show_time) {
   if (typeof show_time === "undefined") {
     show_time = true;
   }
-  
+
   var result = "%Y-%m-%d(%a) %h:%M";
   var weekdays = ["日", "月", "火", "水", "木", "金", "土"];
   var result = result.replace('%Y-', '')
@@ -48,7 +48,7 @@ var closestDate = {
   }
 }
 
-Date.prototype.addHours = function(h) {    
-   this.setTime(this.getTime() + (h*60*60*1000)); 
-   return this;   
+Date.prototype.addHours = function(h) {
+  this.setTime(this.getTime() + (h * 60 * 60 * 1000));
+  return this;
 }

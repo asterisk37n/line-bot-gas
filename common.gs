@@ -45,17 +45,15 @@ function getGoogleCalendarLink(datetime) {
     '&sprop=' + 'name:' + encodeURIComponent('LINE bot');
 }
 
-var getProfile = function(userId, token){
+var getProfile = function(userId, token) {
   var url = "https://api.line.me/v2/bot/profile/" + userId.toString();
   var params = {
-    headers:
-      {
-        Authorization: "Bearer " + token.toString()
-      }
+    headers: {
+      Authorization: "Bearer " + token.toString()
+    }
   };
   var response = UrlFetchApp.fetch(url, params);
   var json = response.getContentText();
   var data = JSON.parse(json);
   return data;
 }
-

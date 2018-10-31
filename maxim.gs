@@ -17,7 +17,7 @@ var maxim = {
     // if success, return name, if record not found, return false
     var data = this.sheet.getDataRange().getValues();
     if (typeof id === 'undefined') {
-      return data[Math.floor(Math.random()*data.length)];
+      return data[Math.floor(Math.random() * data.length)];
     }
     for (var i = 0; i < data.length; i++) {
       if (data[i][0] == id) {

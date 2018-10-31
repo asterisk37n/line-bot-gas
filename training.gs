@@ -1,6 +1,6 @@
 var training = {
   sheet: SpreadsheetApp.getActive().getSheetByName('training'),
-  
+
   create: function(userId, messageId) {
     var timestamp = new Date()
     this.sheet.appendRow([userId, timestamp.getTime(), timestamp.toString(), messageId]);
@@ -17,28 +17,28 @@ var training = {
     var data = this.sheet.getDataRange().getValues();
     data = data.slice(1, data.length); // remove header
     if (userId) {
-      data = data.filter(function(row){
+      data = data.filter(function(row) {
         return row[0] === userId
-      }); 
+      });
     }
 
     if (from) {
       var from_unixtime = from.getTime();
-      data = data.filter(function(row){
+      data = data.filter(function(row) {
         return parseInt(row[1]) > from_unixtime;
-      }); 
+      });
     }
 
     if (to) {
       var to_unixtime = to.getTime();
-      data = data.filter(function(row){
+      data = data.filter(function(row) {
         return parseInt(row[1]) < to_unixtime;
-      }); 
+      });
     }
 
     return data;
   },
-  
+
   clean: function() {
     var date = new Date();
     var firstDate = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -50,14 +50,14 @@ var training = {
       }
     }
   },
-  
+
   count: function(userId, from, to) {
     var data = this.read(userId, from, to);
-    var userIds = data.map(function(row){
+    var userIds = data.map(function(row) {
       return row[0];
     }); // ex: [usrid1, userid2, userid2]
-  
-    var counted = userIds.reduce(function (accum, userId) { 
+
+    var counted = userIds.reduce(function(accum, userId) {
       if (userId in accum) {
         accum[userId]++;
       } else {
@@ -69,7 +69,7 @@ var training = {
     var sorted = Object.keys(counted).map(function(key) {
       return [key, counted[key]];
     }).sort(function(a, b) {
-        return b[1] - a[1];
+      return b[1] - a[1];
     });
     return sorted; // ex: [[userid2, 2], [userid1, 1]]
   }
