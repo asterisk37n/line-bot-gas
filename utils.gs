@@ -1,3 +1,4 @@
+// Deprecated. Use Date.prototype.toJPString(includeTime)
 function toJapaneseDate(date, show_time) {
   if (typeof date === "number") {
     date = new Date(date);

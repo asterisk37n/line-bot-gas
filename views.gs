@@ -111,20 +111,20 @@ function generateMessageForReservationByDatetimePicker(event) {
   if (!isValidReservationDatetime(reservationDatetime)) {
     return {
       type: "text",
-      text: toJapaneseDate(reservationDatetime) + "は予約を受け付けていない時間です."
+      text: reservationDatetime.toJPString() + "は予約を受け付けていない時間です."
     }
   }
   
   if (counted.hasOwnProperty(reservationDatetime) && counted[reservationDatetime] >= 6) {
     return {
       type: "text",
-      text: toJapaneseDate(reservationDatetime) + "は満席です. 他の日時を試してください."
+      text: reservationDatetime.toJPString() + "は満席です. 他の日時を試してください."
     };
   }
   reservation.createReservation(userId, reservationDatetime);
   return {
     type: "text",
-    text: toJapaneseDate(reservationDatetime) + "が予約されました. 以下のリンクからCalendarに追加できます.\n" + getGoogleCalendarLink(reservationDatetime)
+    text: reservationDatetime.toJPString() + "が予約されました. 以下のリンクからCalendarに追加できます.\n" + getGoogleCalendarLink(reservationDatetime)
   };
 }
 
@@ -132,7 +132,7 @@ function generateMessageForReadReservation(event, getProfile, CHANNEL_ACCESS_TOK
   var userId = event.source.userId;
   var reservations = reservation.readReservation(userId, new Date());
   var text = reservations.map(function(row) {
-    return toJapaneseDate(parseInt(row[1])) + ' ' + getProfile(row[0], CHANNEL_ACCESS_TOKEN).displayName;
+    return new Date(parseInt(row[1])).toJPString() + ' ' + getProfile(row[0], CHANNEL_ACCESS_TOKEN).displayName;
   }).join("\n");
   text = text || "予約がありません.";
 
@@ -150,7 +150,7 @@ function generateMessageForDeleteReservation(event) {
     var timestamp = parseInt(row[1]);
     return {
       type: "postback",
-      label: toJapaneseDate(timestamp),
+      label: new Date(timestamp).toJPString(),
       data: JSON.stringify({
         state: "RESERVATION_DELETE_CONFIRMATION",
         userId: userId,
@@ -184,9 +184,9 @@ function generateMessageForDeleteReservationConfirmation(event, getProfile, CHAN
   var response = reservation.deleteReservation(userId, data.timestamp);
   var text;
   if (response.status == 200) {
-    text = getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName + "さんの" + toJapaneseDate(data.timestamp) + "の予約をキャンセルしました.";
+    text = getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName + "さんの" + new Date(data.timestamp).toJPString() + "の予約をキャンセルしました.";
   } else if (response.status == 404) {
-    text = getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName + "さんの" + toJapaneseDate(data.timestamp) + "の予約は削除済みです.";
+    text = getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName + "さんの" + new Date(data.timestamp).toJPString() + "の予約は削除済みです.";
   }
   return {
     type: "text",
@@ -377,13 +377,14 @@ function generateMessageForReadAllReservation() {
 
   function convertArrToButtons(arr) {
     var contents = arr.map(function(row) {
+    var JPString = new Date(parseInt(row[0])).toJPString();
       return {
         type: "button",
         style: "link",
         action: {
           type: "postback",
-          label: toJapaneseDate(new Date(parseInt(row[0])), true) + " " + row[1] + "人",
-          displayText: toJapaneseDate(new Date(parseInt(row[0]))),
+          label: JPString + " " + row[1] + "人",
+          displayText: JPString,
           data: JSON.stringify({
             state: "RESERVATION_RETRIEVE",
             timestamp: parseInt(row[0])
@@ -466,7 +467,7 @@ function generateMessageForRetrieveReservation(event, getProfile, CHANNEL_ACCESS
 
   return {
     type: "text",
-    text: toJapaneseDate(new Date(data.timestamp), true) + "\n" + users.join('\n')
+    text: new Date(data.timestamp).toJPString() + "\n" + users.join('\n')
   };
 }
 
@@ -487,6 +488,9 @@ function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
   var countsPrevMonth = training.count(userToCount, firstDay, lastDay);
 
   function convertArrToButtons(arr) {
+    if (arr.length === 0) {
+      return [{type: "text", text: "まだ記録がありません."}];
+    }
     var contents = arr.map(function(row) {
       var name = getProfile(row[0], CHANNEL_ACCESS_TOKEN).displayName;
       return {
@@ -502,15 +506,14 @@ function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
           })
         }
       }
-    }) || {
-      type: "text",
-      text: "No contents"
-    };
+    });
     return contents;
   }
 
   var latestButtons = convertArrToButtons(countsThisMonth);
   var prevButtons = convertArrToButtons(countsPrevMonth);
+  
+  console.log(latestButtons);
 
   return {
     type: "flex",

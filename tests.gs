@@ -11,7 +11,6 @@ function testProfile() {
   Logger.log(response)
 }
 
-
 function testResCreate() {
   var res = reservation.createReservation('id', new Date());
   console.log(res);
