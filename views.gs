@@ -365,74 +365,120 @@ function generateQuickReplyAdminMessage(){
 }
 
 function generateMessageForReadAllReservation() {
-  var contents = [];
   var date = new Date();
-  var firstDayOfPreviousMonth = new Date(date.getFullYear(), date.getMonth() - 1, 1);
-  var firstDayOfThisMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-
-  var countsPrevious = reservation.countReservation(firstDayOfPreviousMonth, firstDayOfThisMonth);
-  var countsThis = reservation.countReservation(firstDayOfThisMonth, null);
-
-  var countsPrevious = Object.keys(countsPrevious).map(function(key) {
-    return [Number(key), countsPrevious[key]];
+  var countsObj = reservation.countReservation(new Date(date.getFullYear(), date.getMonth() -3, 1), null);
+  var counts = Object.keys(countsObj).map(function(key) {
+    return [Number(key), countsObj[key]];
   });
-
-  var countsThis = Object.keys(countsThis).map(function(key) {
-    return [Number(key), countsThis[key]];
+  var latestMonth = new Date(counts[counts.length - 1][0]).getMonth() + 1;
+  
+  var latestCounts   = counts.filter(function(row) {
+    return new Date(row[0]).getMonth() + 1 === latestMonth;
   });
-
-  var contentsPrevious = countsPrevious.map(function(row) {
-    return {
-      type: "button",
-      style: "link",
-      action: {
-        type: "postback",
-        label: toJapaneseDate(new Date(parseInt(row[0])), true) + " " + row[1] + "人",
-        displayText: toJapaneseDate(new Date(parseInt(row[0])), false),
-        data: JSON.stringify({
-          state: "RESERVATION_RETRIEVE",
-          timestamp: parseInt(row[0])
-        })
+  var prevCounts     = counts.filter(function(row) {
+    return new Date(row[0]).getMonth() + 1 === latestMonth - 1;
+  });
+  var prevPrevCounts = counts.filter(function(row) {
+    return new Date(row[0]).getMonth() + 1 === latestMonth -2;
+  });
+  
+  function convertArrToButtons(arr) {
+    return arr.map(function(row) {
+      return {
+        type: "button",
+        style: "link",
+        action: {
+          type: "postback",
+          label: toJapaneseDate(new Date(parseInt(row[0])), true) + " " + row[1] + "人",
+          displayText: toJapaneseDate(new Date(parseInt(row[0])), false),
+          data: JSON.stringify({
+            state: "RESERVATION_RETRIEVE",
+            timestamp: parseInt(row[0])
+          })
+        }
       }
-    }
-  });
-
-  var contentsThis = countsThis.map(function(row) {
-    return {
-      type: "button",
-      style: "link",
-      action: {
-        type: "postback",
-        label: toJapaneseDate(new Date(parseInt(row[0])), true) + " " + row[1] + "人",
-        displayText: toJapaneseDate(new Date(parseInt(row[0])), false),
-        data: JSON.stringify({
-          state: "RESERVATION_RETRIEVE",
-          timestamp: parseInt(row[0])
-        })
-      }
-    }
-  });
+    }) || {type: "text", text: "予約がありません"};
+  }
+  
+  var latestButtons   = convertArrToButtons(latestCounts);
+  var prevButtons     = convertArrToButtons(prevCounts);
+  var prevPrevButtons = convertArrToButtons(prevPrevCounts);
+  
+  console.log(latestButtons);
+  console.log(prevButtons);
+  console.log(prevPrevButtons);
 
   return {
-    "type": "flex",
-    "altText": "This is a Flex Message",
-    "contents": {
-      "type": "carousel",
-      "contents": [{
-        "type": "bubble",
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": contentsThis
+    type: "flex",
+    altText: "This is a Flex Message",
+    contents: {
+      type: "carousel",
+      contents: [{
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: latestMonth.toString() + "月"
+            }
+          ]
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: latestButtons
         }
       }, {
-        "type": "bubble",
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": contentsPrevious
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: (latestMonth - 1).toString() + "月"
+            }
+          ]
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: prevButtons
+        }
+      }, {
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: (latestMonth - 2).toString() + "月"
+            }
+          ]
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: prevPrevButtons
         }
       }]
     }
+  };
+}
+
+function generateMessageForRetrieveReservation(event, getProfile, CHANNEL_ACCESS_TOKEN) {
+  var data = JSON.parse(event.postback.data);
+  var res = reservation.retrieve(data.timestamp);
+  var userIds = res.userIds;
+  var users = userIds.map(function(userId){
+    return getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName
+  });
+  
+  return {
+    type: "text",
+    text: toJapaneseDate(new Date(data.timestamp), true) + "\n"  + users.join('\n')
   };
 }

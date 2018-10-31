@@ -18,22 +18,29 @@ var reservation = {
     return {status: 201, sheet: this.sheet.appendRow([userId, datetime.getTime(), datetime.toString()])};
   },
 
-  readReservation: function(userId, from) {
+  readReservation: function(userId, from, to) {
     userId = (typeof userId !== 'undefined') ? userId : "";
     var data = this.sheet.getDataRange().getValues();
     data = data.slice(1, data.length); // skip table header
     
     if (userId) {
-      data = data.filter(function(row){
+      data = data.filter(function(row) {
         return row[0] === userId;
       });
     }
 
     if (from) {
       var from_unixtime = from.getTime();
-      data = data.filter(function(row){
+      data = data.filter(function(row) {
         return parseInt(row[1]) > from_unixtime;
       }); 
+    }
+    
+    if (to) {
+      var to_unixtime = to.getTime();
+      data = data.filter(function(row) {
+        return parseInt(row[1]) < to_unixtime;
+      });
     }
     
     data = data.sort(function(a, b) {
@@ -57,7 +64,7 @@ var reservation = {
   },
   
   countReservation: function(from, to) {
-    var data = this.readReservation(null, from);
+    var data = this.readReservation(null, from, to);
     var counted = data.reduce(function (accum, row){
       var unixtime = parseInt(row[1]);
       if (unixtime in accum) {

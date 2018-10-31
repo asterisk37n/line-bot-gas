@@ -99,6 +99,9 @@ function generateMessagesToPostbackEvent(event) {
   } else if (data.state === "ADMIN_RESERVATION_READ") {
     messages.push(generateMessageForReadAllReservation());
     messages.push(generateQuickReplyAdminMessage());
+  } else if (data.state === "RESERVATION_RETRIEVE") {
+    messages.push(generateMessageForRetrieveReservation(event, getProfile, CHANNEL_ACCESS_TOKEN));
+    messages.push(generateQuickReplyAdminMessage());
   }
   
   return messages;
@@ -142,6 +145,7 @@ function doPost(e) {
   }
 
   var user_message = '';
+  return;
   if (user_message.match(/^予約作成$/)) {
     var monday = closestDate.monday();
     var thursday = closestDate.thursday();
@@ -349,55 +353,6 @@ function doPost(e) {
     messages = [{
       type: "text",
       text: text
-    }]
-
-  } else if (user_message.match(/^記録$/)) {
-    var contents = []
-    var counts = reservation.countReservation(null, null);
-    var counts = Object.keys(counts).map(function(key) {
-      return [Number(key), counts[key]];
-    });
-    contents = counts.map(function(row) {
-      return {
-        type: "button",
-        style: "link",
-        action: {
-          type: "postback",
-          label: toJapaneseDate(new Date(parseInt(row[0])), true) + " " + row[1] + "人",
-          displayText: toJapaneseDate(new Date(parseInt(row[0])), false),
-          data: JSON.stringify({
-            action: "history",
-            phase: "retrieve",
-            timestamp: parseInt(row[0])
-          })
-        }
-      }
-    })
-
-    messages = [{
-      "type": "flex",
-      "altText": "This is a Flex Message",
-      "contents": {
-        "type": "carousel",
-        "contents": [{
-          "type": "bubble",
-          "body": {
-            "type": "box",
-            "layout": "vertical",
-            "contents": contents.filter(function(row) {
-            return new Date(row.action.data.timestamp).getMonth() == new Date().getMonth()})
-          }
-        },
-        {
-          "type": "bubble",
-          "body": {
-            "type": "box",
-            "layout": "vertical",
-            "contents": contents
-          }
-        }
-        ]
-      }
     }]
 
   } else if (contents.events[0].type === "postback" && data.action == "history" && data.phase == "retrieve") {
