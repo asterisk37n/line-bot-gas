@@ -54,8 +54,3 @@ var maxim = {
     return false;
   }
 };
-
-function testRead() {
-  var row = maxim.readMaxim();
-  console.log(row);
-}
