@@ -106,27 +106,27 @@ function generateQuickReplyReservationMessage() {
 
 function generateMessageForReservationByDatetimePicker(event) {
   var userId = event.source.userId;
-  var reservation_datetime = new Date(event.postback.params.datetime);
+  var reservationDatetime = new Date(event.postback.params.datetime);
   var counted = reservation.countReservation(new Date(), null);
   var messages = [];
   
-  if (!isValidReservationDatetime(reservation_datetime)) {
+  if (!isValidReservationDatetime(reservationDatetime)) {
     return {
       type: "text",
-      text: toJapaneseDate(reservation_datetime) + "は予約を受け付けていない時間です."
+      text: toJapaneseDate(reservationDatetime) + "は予約を受け付けていない時間です."
     }
   }
   
-  if (counted.hasOwnProperty(reservation_datetime) && counted[reservation_datetime] >= 6) {
+  if (counted.hasOwnProperty(reservationDatetime) && counted[reservationDatetime] >= 6) {
     return {
       type: "text",
-      text: toJapaneseDate(reservation_datetime) + "は満席です. 他の日時を試してください."
+      text: toJapaneseDate(reservationDatetime) + "は満席です. 他の日時を試してください."
     };
   }
-  reservation.createReservation(userId, reservation_datetime);
+  reservation.createReservation(userId, reservationDatetime);
   return {
     type: "text",
-    text: toJapaneseDate(reservation_datetime) + "が予約されました. 以下のリンクからCalendarに追加できます.\n" + getGoogleCalendarLink(reservation_datetime)
+    text: toJapaneseDate(reservationDatetime) + "が予約されました. 以下のリンクからCalendarに追加できます.\n" + getGoogleCalendarLink(reservationDatetime)
   };
 }
 
