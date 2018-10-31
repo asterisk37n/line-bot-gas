@@ -280,6 +280,10 @@ function generateMessageForCountWorkout(event, getProfile, CANNEL_ACCESS_TOKEN) 
   };
 }
 
+// --------
+// Welcome Message when you add chat bot to a freind list
+// --------
+
 function generateWelcomeMessage(){
   return {
     type: "text",
@@ -328,22 +332,10 @@ function generateQuickReplyAdminMessage(){
           imageUrl: "https://content.active.com/Assets/Active.com+Content+Site+Digital+Assets/Fitness/580x350/Push-Up.jpg",
           action: {
             type: "postback",
-            label: "今月の全員の筋トレ回数を表示",
-            displayText: "今月の全員の筋トレ回数を表示",
+            label: "全員の筋トレ回数を表示",
+            displayText: "全員の筋トレ回数を表示",
             data: JSON.stringify({
-              state: "ADMIN_WORKOUT_COUNT_THIS_MONTH"
-            })
-          }
-        },
-        {
-          type: "action",
-          imageUrl: "https://content.active.com/Assets/Active.com+Content+Site+Digital+Assets/Fitness/580x350/Push-Up.jpg",
-          action: {
-            type: "postback",
-            label: "先月の全員の筋トレ回数を表示",
-            displayText: "先月の全員の筋トレ回数を表示",
-            data: JSON.stringify({
-              state: "ADMIN_WORKOUT_COUNT_LAST_MONTH"
+              state: "ADMIN_WORKOUT_COUNT"
             })
           }
         },
@@ -383,14 +375,14 @@ function generateMessageForReadAllReservation() {
   });
   
   function convertArrToButtons(arr) {
-    return arr.map(function(row) {
+    var contents = arr.map(function(row) {
       return {
         type: "button",
         style: "link",
         action: {
           type: "postback",
           label: toJapaneseDate(new Date(parseInt(row[0])), true) + " " + row[1] + "人",
-          displayText: toJapaneseDate(new Date(parseInt(row[0])), false),
+          displayText: toJapaneseDate(new Date(parseInt(row[0]))),
           data: JSON.stringify({
             state: "RESERVATION_RETRIEVE",
             timestamp: parseInt(row[0])
@@ -398,15 +390,13 @@ function generateMessageForReadAllReservation() {
         }
       }
     }) || {type: "text", text: "予約がありません"};
+    return contents;
   }
   
   var latestButtons   = convertArrToButtons(latestCounts);
   var prevButtons     = convertArrToButtons(prevCounts);
   var prevPrevButtons = convertArrToButtons(prevPrevCounts);
-  
-  console.log(latestButtons);
-  console.log(prevButtons);
-  console.log(prevPrevButtons);
+
 
   return {
     type: "flex",
@@ -480,5 +470,86 @@ function generateMessageForRetrieveReservation(event, getProfile, CHANNEL_ACCESS
   return {
     type: "text",
     text: toJapaneseDate(new Date(data.timestamp), true) + "\n"  + users.join('\n')
+  };
+}
+
+function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
+  var userToCount = null;
+  var date = new Date();
+  var latestMonth = date.getMonth() + 1;
+  // This month
+  var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+  var countsThisMonth = training.count(userToCount, firstDay, lastDay);
+  // last month
+  var prevMonth = latestMonth - 1;
+  var firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+  var lastDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  var countsPrevMonth = training.count(userToCount, firstDay, lastDay);
+  
+  function convertArrToButtons(arr) {
+    var contents = arr.map(function(row) {
+      var name = getProfile(row[0], CHANNEL_ACCESS_TOKEN).displayName;
+      return {
+        type: "button",
+        style: "link",
+        action: {
+          type: "postback",
+          label: name.substring(0, 8) + ": " + row[1].toString() + "回",
+          displayText: name + ": " + row[1].toString() + "回",
+          data: JSON.stringify({
+            state: "WORKOUT_RETRIEVE",
+            timestamp: parseInt(row[0])
+          })
+        }
+      }
+    }) || {type: "text", text: "No contents"};
+    return contents;
+  }
+  
+  var latestButtons = convertArrToButtons(countsThisMonth);
+  var prevButtons = convertArrToButtons(countsPrevMonth);
+  
+  return {
+    type: "flex",
+    altText: "This is a Flex Message",
+    contents: {
+      type: "carousel",
+      contents: [{
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: latestMonth.toString() + "月"
+            }
+          ]
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: latestButtons
+        }
+      }, {
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: prevMonth.toString() + "月"
+            }
+          ]
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: prevButtons
+        }
+      }]
+    }
   };
 }

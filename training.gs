@@ -32,7 +32,6 @@ var training = {
     if (to) {
       var to_unixtime = to.getTime();
       data = data.filter(function(row){
-        console.log(parseInt(row[1]), to_unixtime);
         return parseInt(row[1]) < to_unixtime;
       }); 
     }

@@ -99,8 +99,13 @@ function generateMessagesToPostbackEvent(event) {
   } else if (data.state === "ADMIN_RESERVATION_READ") {
     messages.push(generateMessageForReadAllReservation());
     messages.push(generateQuickReplyAdminMessage());
+
   } else if (data.state === "RESERVATION_RETRIEVE") {
     messages.push(generateMessageForRetrieveReservation(event, getProfile, CHANNEL_ACCESS_TOKEN));
+    messages.push(generateQuickReplyAdminMessage());
+  
+  } else if (data.state === "ADMIN_WORKOUT_COUNT") {
+    messages.push(generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN));
     messages.push(generateQuickReplyAdminMessage());
   }
   
