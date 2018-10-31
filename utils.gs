@@ -52,3 +52,10 @@ Date.prototype.addHours = function(h) {
   this.setTime(this.getTime() + (h * 60 * 60 * 1000));
   return this;
 }
+
+Date.prototype.toLINEString = function() {
+  // It follows RFC3339 but it drops seconds, milliseconds and timezone
+  var japString = this.addHours(9).toISOString();
+  var lineString = japString.substring(0, japString.length - 8);
+  return lineString;
+}

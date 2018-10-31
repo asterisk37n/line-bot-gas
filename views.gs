@@ -39,10 +39,8 @@ function generateQuickReplyTopMessage() {
 function generateQuickReplyReservationMessage() {
 
   // Add nine hours because ISO timezone is always zero offset to UTC as denoted by the suffix "Z"
-  var initialDatetime = new Date().addHours(9).toISOString();
-  var initialDatetimeString = initialDatetime.substring(0, initialDatetime.length - 8);
-  var maxDatetime = new Date().addHours(9 + 24 * 14).toISOString();
-  var maxDatetimeString = maxDatetime.substring(0, maxDatetime.length - 8);
+  var initialDatetimeString = new Date().toLINEString();
+  var maxDatetimeString = new Date().addHours(24 * 14).toLINEString();
 
   return {
     type: "text",
