@@ -39,9 +39,9 @@ function generateQuickReplyTopMessage() {
 function generateQuickReplyReservationMessage() {
   var initialDatetime = new Date().toISOString();
   var initialDatetimeString = initialDatetime.substring(0, initialDatetime.length - 8);
-  var maxDatetime = new Date().addHours(24*14).toISOString();
+  var maxDatetime = new Date().addHours(24 * 14).toISOString();
   var maxDatetimeString = maxDatetime.substring(0, maxDatetime.length - 8);
-  
+
   return {
     type: "text",
     text: "予約メニューを選んでください",
@@ -127,7 +127,7 @@ function generateMessageForReadReservation(event, getProfile, CHANNEL_ACCESS_TOK
     return toJapaneseDate(parseInt(row[1])) + ' ' + getProfile(row[0], CHANNEL_ACCESS_TOKEN).displayName;
   }).join("\n");
   text = text || "予約がありません.";
-  
+
   return {
     type: "text",
     text: text
@@ -150,14 +150,14 @@ function generateMessageForDeleteReservation(event) {
       })
     }
   });
-  
+
   if (actions.length === 0) {
     return {
       type: "text",
       text: '予約がありません.'
     };
   }
-  
+
   return {
     type: "template",
     altText: "バディトレ出席キャンセル",
@@ -266,7 +266,7 @@ function generateMessageForCountWorkout(event, getProfile, CANNEL_ACCESS_TOKEN) 
     return getProfile(row[0], CHANNEL_ACCESS_TOKEN).displayName + 'さんの' + monthToCount.toString() + '月のトレーニングは' + row[1].toString() + '回です.';
   }).join('\n').toString();
   text = text || 'トレーニング記録はありません.';
-  
+
   return {
     type: "text",
     text: text
@@ -277,25 +277,25 @@ function generateMessageForCountWorkout(event, getProfile, CANNEL_ACCESS_TOKEN) 
 // Welcome Message when you add chat bot to a freind list
 // --------
 
-function generateWelcomeMessage(){
+function generateWelcomeMessage() {
   return {
     type: "text",
     text: "＜筋トレの回数について＞\n" +
-    "バディトレでは、\n" +
-    "・自身でトレーニングした際に動画をアップ\n" +
-    "・バディトレに来た際にトレーニング動画をアップ\n" +
-    "条件は1秒以上の動画であれば、他に指定はありません。\n" +
-    "ただし、30分以上の高い強度でのトレーニングに限ります。\n" +
-    "他の目的で動画をアップすることはお控えください。\n" +
-    "その際に、過去の名将やボディビルダーの名言とともに、botが記憶します。\n" +
-    "名言は単に意識が高くなるだけで、特に深い意味はありません笑 我々なりのユーモアです。\n" +
-    "毎月トップの方にはプロテインか\"燃え燃え\"、そして２位の方にはBCAAをプレゼントします。\n" +
-    "\n" + 
-    "＜キャンセルについて＞\n" +
-    "今後は枠当たり６人限定です。これまでテスト運用していたbotはしっかり運用してまいります。６人を超えた枠には予約ができなくなります。\n" +
-    "参加できなくなった場合は1時間前までを目安にキャンセルしてください。\n" +
-    "あまり無断キャンセルが多いとこちらも対応を考えないといけなくなります。\n" +
-    "一方で、すぐに埋まるような現状が続きましたらクラス増設を検討いたします。一般的に皆様が夜これるであろう19−23時ごろまでは行うつもりです。"
+      "バディトレでは、\n" +
+      "・自身でトレーニングした際に動画をアップ\n" +
+      "・バディトレに来た際にトレーニング動画をアップ\n" +
+      "条件は1秒以上の動画であれば、他に指定はありません。\n" +
+      "ただし、30分以上の高い強度でのトレーニングに限ります。\n" +
+      "他の目的で動画をアップすることはお控えください。\n" +
+      "その際に、過去の名将やボディビルダーの名言とともに、botが記憶します。\n" +
+      "名言は単に意識が高くなるだけで、特に深い意味はありません笑 我々なりのユーモアです。\n" +
+      "毎月トップの方にはプロテインか\"燃え燃え\"、そして２位の方にはBCAAをプレゼントします。\n" +
+      "\n" +
+      "＜キャンセルについて＞\n" +
+      "今後は枠当たり６人限定です。これまでテスト運用していたbotはしっかり運用してまいります。６人を超えた枠には予約ができなくなります。\n" +
+      "参加できなくなった場合は1時間前までを目安にキャンセルしてください。\n" +
+      "あまり無断キャンセルが多いとこちらも対応を考えないといけなくなります。\n" +
+      "一方で、すぐに埋まるような現状が続きましたらクラス増設を検討いたします。一般的に皆様が夜これるであろう19−23時ごろまでは行うつもりです。"
   };
 }
 
@@ -303,7 +303,7 @@ function generateWelcomeMessage(){
 // Administrator Views
 // --------
 
-function generateQuickReplyAdminMessage(){
+function generateQuickReplyAdminMessage() {
   return {
     type: "text",
     text: "管理者用メニューを選んでください",
@@ -351,22 +351,22 @@ function generateQuickReplyAdminMessage(){
 
 function generateMessageForReadAllReservation() {
   var date = new Date();
-  var countsObj = reservation.countReservation(new Date(date.getFullYear(), date.getMonth() -3, 1), null);
+  var countsObj = reservation.countReservation(new Date(date.getFullYear(), date.getMonth() - 3, 1), null);
   var counts = Object.keys(countsObj).map(function(key) {
     return [Number(key), countsObj[key]];
   });
   var latestMonth = new Date(counts[counts.length - 1][0]).getMonth() + 1;
-  
-  var latestCounts   = counts.filter(function(row) {
+
+  var latestCounts = counts.filter(function(row) {
     return new Date(row[0]).getMonth() + 1 === latestMonth;
   });
-  var prevCounts     = counts.filter(function(row) {
+  var prevCounts = counts.filter(function(row) {
     return new Date(row[0]).getMonth() + 1 === latestMonth - 1;
   });
   var prevPrevCounts = counts.filter(function(row) {
-    return new Date(row[0]).getMonth() + 1 === latestMonth -2;
+    return new Date(row[0]).getMonth() + 1 === latestMonth - 2;
   });
-  
+
   function convertArrToButtons(arr) {
     var contents = arr.map(function(row) {
       return {
@@ -382,14 +382,16 @@ function generateMessageForReadAllReservation() {
           })
         }
       }
-    }) || {type: "text", text: "予約がありません"};
+    }) || {
+      type: "text",
+      text: "予約がありません"
+    };
     return contents;
   }
-  
-  var latestButtons   = convertArrToButtons(latestCounts);
-  var prevButtons     = convertArrToButtons(prevCounts);
-  var prevPrevButtons = convertArrToButtons(prevPrevCounts);
 
+  var latestButtons = convertArrToButtons(latestCounts);
+  var prevButtons = convertArrToButtons(prevCounts);
+  var prevPrevButtons = convertArrToButtons(prevPrevCounts);
 
   return {
     type: "flex",
@@ -401,12 +403,10 @@ function generateMessageForReadAllReservation() {
         header: {
           type: "box",
           layout: "vertical",
-          contents: [
-            {
-              type: "text",
-              text: latestMonth.toString() + "月"
-            }
-          ]
+          contents: [{
+            type: "text",
+            text: latestMonth.toString() + "月"
+          }]
         },
         body: {
           type: "box",
@@ -418,12 +418,10 @@ function generateMessageForReadAllReservation() {
         header: {
           type: "box",
           layout: "vertical",
-          contents: [
-            {
-              type: "text",
-              text: (latestMonth - 1).toString() + "月"
-            }
-          ]
+          contents: [{
+            type: "text",
+            text: (latestMonth - 1).toString() + "月"
+          }]
         },
         body: {
           type: "box",
@@ -435,12 +433,10 @@ function generateMessageForReadAllReservation() {
         header: {
           type: "box",
           layout: "vertical",
-          contents: [
-            {
-              type: "text",
-              text: (latestMonth - 2).toString() + "月"
-            }
-          ]
+          contents: [{
+            type: "text",
+            text: (latestMonth - 2).toString() + "月"
+          }]
         },
         body: {
           type: "box",
@@ -456,13 +452,13 @@ function generateMessageForRetrieveReservation(event, getProfile, CHANNEL_ACCESS
   var data = JSON.parse(event.postback.data);
   var res = reservation.retrieve(data.timestamp);
   var userIds = res.userIds;
-  var users = userIds.map(function(userId){
+  var users = userIds.map(function(userId) {
     return getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName
   });
-  
+
   return {
     type: "text",
-    text: toJapaneseDate(new Date(data.timestamp), true) + "\n"  + users.join('\n')
+    text: toJapaneseDate(new Date(data.timestamp), true) + "\n" + users.join('\n')
   };
 }
 
@@ -470,16 +466,18 @@ function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
   var userToCount = null;
   var date = new Date();
   var latestMonth = date.getMonth() + 1;
+  
   // Latest month
   var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
   var countsThisMonth = training.count(userToCount, firstDay, lastDay);
+  
   // Previous month
   var prevMonth = latestMonth - 1;
   var firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
   var lastDay = new Date(date.getFullYear(), date.getMonth(), 1);
   var countsPrevMonth = training.count(userToCount, firstDay, lastDay);
-  
+
   function convertArrToButtons(arr) {
     var contents = arr.map(function(row) {
       var name = getProfile(row[0], CHANNEL_ACCESS_TOKEN).displayName;
@@ -496,13 +494,16 @@ function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
           })
         }
       }
-    }) || {type: "text", text: "No contents"};
+    }) || {
+      type: "text",
+      text: "No contents"
+    };
     return contents;
   }
-  
+
   var latestButtons = convertArrToButtons(countsThisMonth);
   var prevButtons = convertArrToButtons(countsPrevMonth);
-  
+
   return {
     type: "flex",
     altText: "This is a Flex Message",
@@ -513,12 +514,10 @@ function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
         header: {
           type: "box",
           layout: "vertical",
-          contents: [
-            {
-              type: "text",
-              text: latestMonth.toString() + "月"
-            }
-          ]
+          contents: [{
+            type: "text",
+            text: latestMonth.toString() + "月"
+          }]
         },
         body: {
           type: "box",
@@ -530,12 +529,10 @@ function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
         header: {
           type: "box",
           layout: "vertical",
-          contents: [
-            {
-              type: "text",
-              text: prevMonth.toString() + "月"
-            }
-          ]
+          contents: [{
+            type: "text",
+            text: prevMonth.toString() + "月"
+          }]
         },
         body: {
           type: "box",
