@@ -83,27 +83,3 @@ var reservation = {
     return {timestamp: unixtime, userIds: userIds};
   }
 }
-
-function testCreate() {
-  var res = reservation.createReservation('id', new Date());
-  console.log(res);
-}
-
-function testRead() {
-  var date = new Date();
-  var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  var res = reservation.readReservation('Ud7c64457bd6514f35958e78b1dd0df37', firstDay);
-  console.log(res);
-}
-
-function testCount() {
-  var countsTime = reservation.countReservation(null, null, false);
-  var countsDate = reservation.countReservation(null, null, true);
-  console.log(countsTime);
-  console.log(countsDate);
-}
-
-function testRetrieve() {
-  var result = reservation.retrieve(1535625000000);
-  console.log(result);
-}
