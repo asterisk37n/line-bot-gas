@@ -344,8 +344,8 @@ function generateQuickReplyAdminMessage(){
           imageUrl: "https://pickup.cinemacafe.net/uploads/article/image/1906/card_haul.jpg",
           action: {
             type: "postback",
-            label: "最初に戻る",
-            displayText: "最初に戻る",
+            label: "一般メニューを表示",
+            displayText: "一般メニューを表示",
             data: JSON.stringify({
               state: "ROOT"
             })
