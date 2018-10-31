@@ -37,6 +37,11 @@ function generateQuickReplyTopMessage() {
 // --------
 
 function generateQuickReplyReservationMessage() {
+  var initialDatetime = new Date().toISOString();
+  var initialDatetimeString = initialDatetime.substring(0, initialDatetime.length - 8);
+  var maxDatetime = new Date().addHours(24*14).toISOString();
+  var maxDatetimeString = maxDatetime.substring(0, maxDatetime.length - 8);
+  
   return {
     type: "text",
     text: "予約メニューを選んでください",
@@ -50,10 +55,10 @@ function generateQuickReplyReservationMessage() {
             data: JSON.stringify({
               state: "RESERVATION_CREATE_CONFIRMATION"
             }),
-            mode: "datetime"
-            //                initial: 
-            //                max:
-            //                min:
+            mode: "datetime",
+            min: initialDatetimeString,
+            initial: initialDatetimeString,
+            max: maxDatetimeString
           }
         },
         {
