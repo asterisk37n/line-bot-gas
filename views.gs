@@ -255,18 +255,6 @@ function generateMessageForCountWorkout(event, getProfile, CANNEL_ACCESS_TOKEN) 
   var monthToCount = date.getMonth() + 1;
   var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
-//    if (user_message.match(/.*先月.*/)) {
-//      monthToCount--;
-//      var firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
-//      var lastDay = new Date(date.getFullYear(), date.getMonth(), 1);
-//    }
-//
-//    var userToCount;
-//    if (user_message.match(/.*全員.*/)) {
-//      userToCount = null;
-//    } else {
-//      userToCount = userId;
-//    }
 
   var counts = training.count(userId, firstDay, lastDay);
   var text = counts.map(function(row) {
