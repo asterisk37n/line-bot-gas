@@ -477,11 +477,11 @@ function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
   var userToCount = null;
   var date = new Date();
   var latestMonth = date.getMonth() + 1;
-  // This month
+  // Latest month
   var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
   var countsThisMonth = training.count(userToCount, firstDay, lastDay);
-  // last month
+  // Previous month
   var prevMonth = latestMonth - 1;
   var firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
   var lastDay = new Date(date.getFullYear(), date.getMonth(), 1);
