@@ -44,7 +44,7 @@ function generateQuickReplyReservationMessage() {
 
   return {
     type: "text",
-    text: "予約メニューを選んでください",
+    text: "予約メニューを選んでください. 予約は日, 月, 木曜日の19:00, 20:00, 21:00を選んでください.",
     quickReply: {
       items: [{
           type: "action",
