@@ -7,6 +7,7 @@ function testJapaneseDate() {
 
 function testProfile() {
   var userId = "Ud7c64457bd6514f35958e78b1dd0df37";
+  userId = "U20e74bfdf441bef60569985345274a18";
   var response = getProfile(userId, "IFnzSBGIdZA8dYKBGRrp+rI8z1n/msB6Gux/vABIvUEdNerIc3j8dKC5Ccb2GdDukuy9MowLzYqKglJcNKEnPEzbd/8hXeyzWXdTLjxpu13K0MhR9he8JxdnFOBC+RYRM/ehjRzVzwLj/oDHq5qatAdB04t89/1O/w1cDnyilFU=");
   Logger.log(response)
 }
@@ -24,10 +25,10 @@ function testResRead() {
 }
 
 function testResCount() {
-  var countsTime = reservation.countReservation(null, null, false);
-  var countsDate = reservation.countReservation(null, null, true);
+  var countsTime = reservation.countReservation(null, null);
   console.log(countsTime);
-  console.log(countsDate);
+  var countsFromNow = reservation.countReservation(new Date(), null);
+  console.log(countsFromNow);
 }
 
 function testResRetrieve() {

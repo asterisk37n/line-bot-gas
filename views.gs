@@ -104,9 +104,10 @@ function generateQuickReplyReservationMessage() {
 
 function generateMessageForReservationByDatetimePicker(event) {
   var userId = event.source.userId;
+  // event.postback.params.datetime is in format like "2018-11-05T21:00"
   var reservationDatetime = new Date(event.postback.params.datetime);
+  var reservationTimestamp = reservationDatetime.getTime();
   var counted = reservation.countReservation(new Date(), null);
-  var messages = [];
 
   if (!isValidReservationDatetime(reservationDatetime)) {
     return {
@@ -114,13 +115,14 @@ function generateMessageForReservationByDatetimePicker(event) {
       text: reservationDatetime.toJPString() + "は予約を受け付けていない時間です."
     }
   }
-
-  if (counted.hasOwnProperty(reservationDatetime) && counted[reservationDatetime] >= 6) {
+  
+  if (counted.hasOwnProperty(reservationTimestamp) && counted[reservationTimestamp] >= 6) {
     return {
       type: "text",
       text: reservationDatetime.toJPString() + "は満席です. 他の日時を試してください."
     };
   }
+  console.log("dont come");
   reservation.createReservation(userId, reservationDatetime);
   return {
     type: "text",
