@@ -1,5 +1,5 @@
-var training = {
-  sheet: SpreadsheetApp.getActive().getSheetByName('training'),
+var workout = {
+  sheet: SpreadsheetApp.getActive().getSheetByName('workout'),
 
   create: function(userId, messageId) {
     var timestamp = new Date()

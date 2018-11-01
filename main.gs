@@ -151,6 +151,7 @@ function doPost(e) {
   
   // --------
   // Below code is legacy and is supposed to be deleted someday.
+  // --------
 
   return;
   if (user_message.match(/^予約作成$/)) {

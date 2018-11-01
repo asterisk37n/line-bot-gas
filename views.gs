@@ -243,10 +243,10 @@ function generateQuickReplyWorkoutMessage() {
 function generateMessageForAddWorkout(event) {
   var userId = event.source.userId;
   var messageId = event.message.id
-  training.create(userId, messageId);
+  workout.create(userId, messageId);
   var today = new Date();
   var firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-  var count = training.count(userId, firstDay)[0][1]; // training.count() returns [[userid, count]];
+  var count = workout.count(userId, firstDay)[0][1]; // workout.count() returns [[userid, count]];
   var message = {
     type: "text",
     text: "GOOD JOB! 今月" + count + '回目のトレーニングです.'
@@ -269,7 +269,7 @@ function generateMessageForCountWorkout(event, getProfile, CANNEL_ACCESS_TOKEN) 
   var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
 
-  var counts = training.count(userId, firstDay, lastDay);
+  var counts = workout.count(userId, firstDay, lastDay);
   var text = counts.map(function(row) {
     return getProfile(row[0], CHANNEL_ACCESS_TOKEN).displayName + 'さんの' + monthToCount.toString() + '月のトレーニングは' + row[1].toString() + '回です.';
   }).join('\n').toString();
@@ -479,13 +479,13 @@ function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
   // Latest month
   var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   var lastDay  = new Date(date.getFullYear(), date.getMonth() + 1, 1);
-  var countsThisMonth = training.count(userToCount, firstDay, lastDay);
+  var countsThisMonth = workout.count(userToCount, firstDay, lastDay);
 
   // Previous month
   var prevMonth = latestMonth - 1;
   var firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
   var lastDay  = new Date(date.getFullYear(), date.getMonth(), 1);
-  var countsPrevMonth = training.count(userToCount, firstDay, lastDay);
+  var countsPrevMonth = workout.count(userToCount, firstDay, lastDay);
 
   function convertArrToButtons(arr) {
     if (arr.length === 0) {
