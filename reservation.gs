@@ -10,7 +10,6 @@ var reservation = {
     var data = this.sheet.getDataRange().getValues();
     for (var i = 0; i < data.length; i++) {
       var row = data[i];
-      console.log(row, datetime);
       if (row[0] == userId && parseInt(row[1]) == datetime.getTime()) {
         return {
           status: 409
