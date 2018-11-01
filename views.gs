@@ -122,7 +122,7 @@ function generateMessageForReservationByDatetimePicker(event) {
       text: reservationDatetime.toJPString() + "は満席です. 他の日時を試してください."
     };
   }
-  console.log("dont come");
+
   reservation.createReservation(userId, reservationDatetime);
   return {
     type: "text",
