@@ -8,44 +8,23 @@ function doPost(e) {
   console.log(e);
   var contents = JSON.parse(e.postData.contents);
   var events = contents.events;
-
+  console.log(events.length);
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
-    var reply_token = event.replyToken;
-    var messages = [];
-
-    if (event.type === "message") {
-      messages = messages.concat(generateMessagesToMessageEvent(event));
-
-    } else if (event.type === "follow") {
-
-    } else if (event.type === "unfollow") {
-
-    } else if (event.type === "join") {
-      messages.push(generateWelcomeMessage());
-      messages.push(generateQuickReplyTopMessage());
-
-    } else if (event.type === "leave") {
-
-    } else if (event.type === "postback") {
-      messages = generateMessagesToPostbackEvent(event);
-
-    } else if (event.type === "beacon") {
-
-    } else if (event.type === "accountLink") {
-
-    }
+    var replyToken = event.replyToken;
+    var messages = generateMessagesToEvent(event);
+    
     if (messages.length) {
-      replyMessages(messages, reply_token);
+      replyMessages(messages, replyToken);
     }
-    console.log(contents.events[i]);
   }
+  return;
   
   // --------
   // Below code is legacy and is supposed to be deleted someday.
   // --------
 
-  return;
+
   if (user_message.match(/^予約作成$/)) {
     var monday = closestDate.monday();
     var thursday = closestDate.thursday();

@@ -1,3 +1,35 @@
+function generateMessagesToMessageEvent(event) {
+  var messageId = event.message.id;
+  var messageType = event.message.type;
+  var userMessage = event.message.text;
+  var replyToken = event.replyToken;
+  var messages = [];
+  if (messageType === "text") {
+    var message = generateMessageToTextMessage(event);
+    if (message) {
+      messages.push(message);
+    }
+  } else if (messageType === "image") {
+
+  } else if (messageType === "video") {
+    messages.push(generateMessageForAddWorkout(event));
+    var maximMessage = generateMessageForRandomMaxim();
+    messages.push(maximMessage);
+    var quickReplyWorkoutMessage = generateQuickReplyWorkoutMessage();
+    messages.push(quickReplyWorkoutMessage);
+
+  } else if (messageType === "audio") {
+
+  } else if (messageType === "file") {
+
+  } else if (messageType === "location") {
+
+  } else if (messageType === "sticker") {
+
+  }
+  return messages;
+}
+
 function generateMessageToTextMessage(event) {
   var userMessage = event.message.text;
   userMessage = userMessage.replace(/　/g, " "); // replace full-width space with half-width space
