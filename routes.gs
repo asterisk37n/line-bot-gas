@@ -1,3 +1,30 @@
+function generateMessagesToEvent(event) {
+  var messages = [];
+  
+  if (event.type === "message") {
+    messages = messages.concat(generateMessagesToMessageEvent(event));
+    
+  } else if (event.type === "follow") {
+    
+  } else if (event.type === "unfollow") {
+    
+  } else if (event.type === "join") {
+    messages.push(generateWelcomeMessage());
+    messages.push(generateQuickReplyTopMessage());
+    
+  } else if (event.type === "leave") {
+    
+  } else if (event.type === "postback") {
+    messages = generateMessagesToPostbackEvent(event);
+    
+  } else if (event.type === "beacon") {
+    
+  } else if (event.type === "accountLink") {
+    
+  }
+  return messages;
+}
+
 function generateMessagesToMessageEvent(event) {
   var messageId = event.message.id;
   var messageType = event.message.type;

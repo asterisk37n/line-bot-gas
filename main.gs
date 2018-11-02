@@ -4,6 +4,8 @@ function doGet(e) {
   return ContentService.createTextOutput(UrlFetchApp.fetch("http://ip-api.com/json"));
 }
 
+
+
 function doPost(e) {
   console.log(e);
   var contents = JSON.parse(e.postData.contents);
