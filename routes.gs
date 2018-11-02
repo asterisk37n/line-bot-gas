@@ -1,26 +1,26 @@
 function generateMessagesToEvent(event) {
   var messages = [];
-  
+
   if (event.type === "message") {
     messages = messages.concat(generateMessagesToMessageEvent(event));
-    
+
   } else if (event.type === "follow") {
-    
+
   } else if (event.type === "unfollow") {
-    
+
   } else if (event.type === "join") {
     messages.push(generateWelcomeMessage());
     messages.push(generateQuickReplyTopMessage());
-    
+
   } else if (event.type === "leave") {
-    
+
   } else if (event.type === "postback") {
     messages = generateMessagesToPostbackEvent(event);
-    
+
   } else if (event.type === "beacon") {
-    
+
   } else if (event.type === "accountLink") {
-    
+
   }
   return messages;
 }
@@ -28,13 +28,13 @@ function generateMessagesToEvent(event) {
 function generateMessagesToMessageEvent(event) {
   var messageType = event.message.type;
   var messages = [];
-  
+
   if (messageType === "text") {
     var messageToTextMessage = generateMessageToTextMessage(event);
     if (messageToTextMessage) { // message can be null depeding on recieved message text
       messages.push(messageToTextMessage);
     }
-    
+
   } else if (messageType === "image") {
 
   } else if (messageType === "video") {
@@ -57,7 +57,7 @@ function generateMessagesToMessageEvent(event) {
 function generateMessageToTextMessage(event) {
   var userMessage = event.message.text;
   userMessage = userMessage.replace(/　/g, " "); // replace full-width space with half-width space
-  
+
   if (userMessage.match(/よく生きるとは/)) {
     return {
       type: "text",
@@ -69,7 +69,7 @@ function generateMessageToTextMessage(event) {
 
   } else if (userMessage.match(/^debug$/)) {
     return generateMessageForCreateReservationByFlex();
-  
+
   } else if (userMessage.match(/^.+$/)) {
     return generateQuickReplyTopMessage();
   }
@@ -84,7 +84,7 @@ function generateMessagesToPostbackEvent(event) {
 
   } else if (data.state === 'RESERVATION') {
     messages.push(generateQuickReplyReservationMessage());
-    
+
   } else if (data.state === "RESERVATION_CREATE") {
     messages.push(generateMessageForCreateReservationByFlex());
     messages.push(generateQuickReplyReservationMessage());
