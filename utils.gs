@@ -1,59 +1,10 @@
-// Deprecated. Use Date.prototype.toJPString(includeTime)
-function toJapaneseDate(date, show_time) {
-  if (typeof date === "number") {
-    date = new Date(date);
-  }
-  if (typeof show_time === "undefined") {
-    show_time = true;
-  }
-
-  var result = "%Y-%m-%d(%a) %h:%M";
-  var weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-  result = result.replace('%Y-', '')
-    .replace("%m", ("00" + (date.getMonth() + 1).toString()).slice(-2))
-    .replace("%d", ("00" + date.getDate().toString()).slice(-2))
-    .replace("%a", weekdays[date.getDay()]);
-  if (show_time) {
-    result = result.replace("%h", ("00" + date.getHours().toString()).slice(-2))
-      .replace("%M", ("00" + date.getMinutes().toString()).slice(-2));
-  } else {
-    result = result.replace(" %h:%M", "");
-  }
-  result = result.replace(/^\s*|\s*$/g, "");
-  return result;
-}
-
-function toUniqueArray(arrArg) {
-  return arrArg.filter(function(elem, pos, arr) {
-    return arr.indexOf(elem) == pos;
-  });
-};
-
-var closestDate = {
-  monday: function() {
-    var d = new Date();
-    d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + 1) % 7);
-    return d;
-  },
-  thursday: function() {
-    var d = new Date();
-    d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + 4) % 7);
-    return d;
-  },
-  sunday: function() {
-    var d = new Date();
-    d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + 0) % 7);
-    return d;
-  }
-}
-
 Date.prototype.addHours = function(h) {
   this.setTime(this.getTime() + (h * 60 * 60 * 1000));
   return this;
 }
 
 Date.prototype.toLINEString = function() {
-  // It follows RFC3339 but it drops seconds, milliseconds and timezone
+  // LINE datetime format follows RFC3339 but it drops seconds, milliseconds and timezone
   var japString = this.addHours(9).toISOString();
   var lineString = japString.substring(0, japString.length - 8);
   return lineString;
@@ -63,15 +14,18 @@ Date.prototype.toJPString = function(includeTime) {
   if (typeof includeTime === "undefined") {
     includeTime = true;
   }
+  
   var result = "%Y-%m-%d(%a) %h:%M";
   var weekdays = ["日", "月", "火", "水", "木", "金", "土"];
   result = result.replace('%Y-', '')
     .replace("%m", ("00" + (this.getMonth() + 1).toString()).slice(-2))
     .replace("%d", ("00" + this.getDate().toString()).slice(-2))
     .replace("%a", weekdays[this.getDay()]);
+    
   if (includeTime) {
     result = result.replace("%h", ("00" + this.getHours().toString()).slice(-2))
       .replace("%M", ("00" + this.getMinutes().toString()).slice(-2));
+      
   } else {
     result = result.replace(" %h:%M", "");
   }

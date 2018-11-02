@@ -44,7 +44,7 @@ function getGoogleCalendarLink(datetime) {
     '&sprop=' + 'name:' + encodeURIComponent('LINE bot');
 }
 
-var getProfile = function(userId, token) {
+function getProfile(userId, token) {
   var url = "https://api.line.me/v2/bot/profile/" + userId.toString();
   var params = {
     headers: {
