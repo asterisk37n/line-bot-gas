@@ -63,3 +63,14 @@ function testLINEString() {
   Logger.log(LINEString);
   console.log(LINEString);
 }
+
+function testGenerateMessageForCreateReservation() {
+  var datetimeString = "2020-11-05T20:01";
+  var timestamp = new Date(datetimeString).getTime();
+  var event = {source: {userId: 1}, postback: {params: {datetime: datetimeString}}};
+  var message = generateMessageForConfirmReservation(event);
+  Logger.log(message);
+  event = {source: {userId: 1}, postback: {data: JSON.stringify({timestamp: timestamp})}};
+  message = generateMessageForConfirmReservation(event);
+  Logger.log(message);
+}

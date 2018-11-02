@@ -44,14 +44,14 @@ function generateQuickReplyReservationMessage() {
 
   return {
     type: "text",
-    text: "予約メニューを選んでください. 予約は日, 月, 木曜日の19:00, 20:00, 21:00を選んでください.",
+    text: "予約メニューを選んでください. 予約は日, 月, 木曜日の19:00, 20:00, 21:00が可能です.",
     quickReply: {
       items: [{
           type: "action",
           imageUrl: "https://upload.wikimedia.org/wikipedia/en/8/86/Modern-ftn-pen-cursive.jpg",
           action: {
             type: "datetimepicker",
-            label: "新規予約",
+            label: "新規予約(Picker)",
             data: JSON.stringify({
               state: "RESERVATION_CREATE_CONFIRMATION"
             }),
@@ -59,6 +59,18 @@ function generateQuickReplyReservationMessage() {
             min: initialDatetimeString,
             initial: initialDatetimeString,
             max: maxDatetimeString
+          }
+        },
+        {
+          type: "action",
+          imageUrl: "https://upload.wikimedia.org/wikipedia/en/8/86/Modern-ftn-pen-cursive.jpg",
+          action: {
+            type: "postback",
+            label: "新規予約(選択式)",
+            displayText: "新規予約(選択式)",
+            data: JSON.stringify({
+              state: "RESERVATION_CREATE"
+            })
           }
         },
         {
@@ -102,11 +114,99 @@ function generateQuickReplyReservationMessage() {
   }
 }
 
-function generateMessageForReservationByDatetimePicker(event) {
+function generateMessageForCreateReservationByFlex() {
+  // This way is a little tricky and lacks generality.
+  // First, make array containing every 30 min from now
+  // with minutes 0 to two weeks later, then filter them
+  // to get valid datetime, then filter again to push out occupied datetime.
+  var unoccupied_candidate = [];
+  var datetime = new Date();
+  datetime.setMinutes(0, 0, 0);
+  datetime.setHours(datetime.getHours() + 1);
+  
+  // Generate array containing Dates of every thirty minutes from now to two weeks
+  for (var i = 0; i < 14 * 24 * 60; i += 30) {
+    var ele_datetime = new Date(datetime.getTime())
+    ele_datetime.setMinutes(ele_datetime.getMinutes() + i);
+    unoccupied_candidate.push(ele_datetime);
+  }
+  var counted = reservation.countReservation(new Date(), null);
+  
+  var unoccupied = unoccupied_candidate.filter(function(datetime) {
+    return isValidReservationDatetime(datetime);
+  }).filter(function(datetime){
+    var timestamp = datetime.getTime();
+    var isOccupied = false;
+    if (counted.hasOwnProperty(timestamp)) {
+      if (counted[timestamp] >= 6) {
+        isOccupied = true;
+      }
+    }
+    return !isOccupied;
+  });
+
+  var buttons = unoccupied.map(function(datetime) {
+
+    return {
+      type: "button",
+      style: "link",
+      action: {
+        type: "postback",
+        label: datetime.toJPString(),
+        displayText: datetime.toJPString(),
+        data: JSON.stringify({
+          state: "RESERVATION_CREATE_CONFIRMATION",
+          timestamp: datetime.getTime()
+        })
+      }
+    }
+
+  })
+  
+  return {
+    type: "flex",
+    altText: "This is a Flex Message",
+    contents: {
+      type: "carousel",
+      contents: [{
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [{
+            type: "text",
+            text: "予約"
+          }]
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: buttons
+        }
+      }]
+    }
+  };
+}
+
+function generateMessageForConfirmReservation(event) {
   var userId = event.source.userId;
-  // event.postback.params.datetime is in format like "2018-11-05T21:00"
-  var reservationDatetime = new Date(event.postback.params.datetime);
-  var reservationTimestamp = reservationDatetime.getTime();
+
+  if (event.postback.hasOwnProperty("params")) {
+    // datetimepicker
+    // event.postback.params.datetime is in format like "2018-11-05T21:00"
+    var reservationDatetime = new Date(event.postback.params.datetime);
+    var reservationTimestamp = reservationDatetime.getTime();
+    
+    //TODO: should be removed as this is a temporally analytics line
+    SpreadsheetApp.getActive().getSheetByName('datetimepicker').appendRow([getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName, reservationDatetime.toString()])
+  } else if (event.postback.hasOwnProperty("data")) {
+    // postback
+    var data = JSON.parse(event.postback.data);
+    var reservationTimestamp = data.timestamp;
+    var reservationDatetime = new Date(reservationTimestamp);
+    //TODO: should be removed as this is a temporally analytics line
+    SpreadsheetApp.getActive().getSheetByName('flex').appendRow([getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName, reservationDatetime.toString()])
+  }
   var counted = reservation.countReservation(new Date(), null);
 
   if (!isValidReservationDatetime(reservationDatetime)) {
@@ -116,11 +216,13 @@ function generateMessageForReservationByDatetimePicker(event) {
     }
   }
   
-  if (counted.hasOwnProperty(reservationTimestamp) && counted[reservationTimestamp] >= 6) {
-    return {
-      type: "text",
-      text: reservationDatetime.toJPString() + "は満席です. 他の日時を試してください."
-    };
+  if (counted.hasOwnProperty(reservationTimestamp)) {
+    if (counted[reservationTimestamp] >= 6) {
+      return {
+        type: "text",
+        text: reservationDatetime.toJPString() + "は満席です. 他の日時を試してください."
+      };
+    }
   }
 
   reservation.createReservation(userId, reservationDatetime);
