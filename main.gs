@@ -9,6 +9,7 @@ function doPost(e) {
     var messages = generateMessagesToEvent(event);
     
     if (messages.length) {
+      console.log(messages);
       replyMessages(messages, replyToken);
     }
   }

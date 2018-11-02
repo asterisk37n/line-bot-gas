@@ -1,5 +1,4 @@
 function replyMessages(messages, replyToken) {
-  console.log(messages);
   var LINE_REPLY_ENDPOINT = 'https://api.line.me/v2/bot/message/reply';
   UrlFetchApp.fetch(LINE_REPLY_ENDPOINT, {
     'headers': {
