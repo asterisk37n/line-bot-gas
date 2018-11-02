@@ -123,7 +123,7 @@ function generateMessageForCreateReservationByFlex() {
   var datetime = new Date();
   datetime.setMinutes(0, 0, 0);
   datetime.setHours(datetime.getHours() + 1);
-  
+
   // Generate array containing Dates of every thirty minutes from now to two weeks
   for (var i = 0; i < 14 * 24 * 60; i += 30) {
     var ele_datetime = new Date(datetime.getTime())
@@ -131,10 +131,10 @@ function generateMessageForCreateReservationByFlex() {
     unoccupied_candidate.push(ele_datetime);
   }
   var counted = reservation.countReservation(new Date(), null);
-  
+
   var unoccupied = unoccupied_candidate.filter(function(datetime) {
     return isValidReservationDatetime(datetime);
-  }).filter(function(datetime){
+  }).filter(function(datetime) {
     var timestamp = datetime.getTime();
     var isOccupied = false;
     if (counted.hasOwnProperty(timestamp)) {
@@ -162,7 +162,7 @@ function generateMessageForCreateReservationByFlex() {
     }
 
   })
-  
+
   return {
     type: "flex",
     altText: "This is a Flex Message",
@@ -196,7 +196,7 @@ function generateMessageForConfirmReservation(event) {
     // event.postback.params.datetime is in format like "2018-11-05T21:00"
     var reservationDatetime = new Date(event.postback.params.datetime);
     var reservationTimestamp = reservationDatetime.getTime();
-    
+
     //TODO: should be removed as this is a temporally analytics line
     SpreadsheetApp.getActive().getSheetByName('datetimepicker').appendRow([getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName, reservationDatetime.toString()])
   } else if (event.postback.hasOwnProperty("data")) {
@@ -215,7 +215,7 @@ function generateMessageForConfirmReservation(event) {
       text: reservationDatetime.toJPString() + "は予約を受け付けていない時間です."
     }
   }
-  
+
   if (counted.hasOwnProperty(reservationTimestamp)) {
     if (counted[reservationTimestamp] >= 6) {
       return {
@@ -582,13 +582,13 @@ function generateMessageForCountAllWorkouts(getProfile, CHANNEL_ACCESS_TOKEN) {
 
   // Latest month
   var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  var lastDay  = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+  var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
   var countsThisMonth = workout.count(userToCount, firstDay, lastDay);
 
   // Previous month
   var prevMonth = latestMonth - 1;
   var firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
-  var lastDay  = new Date(date.getFullYear(), date.getMonth(), 1);
+  var lastDay = new Date(date.getFullYear(), date.getMonth(), 1);
   var countsPrevMonth = workout.count(userToCount, firstDay, lastDay);
 
   function convertArrToButtons(arr) {
