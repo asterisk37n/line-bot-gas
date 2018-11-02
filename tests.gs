@@ -41,9 +41,9 @@ function test() {
   var date = new Date();
   var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
-  console.log(training.count());
-  console.log(training.count('Ud7c64457bd6514f35958e78b1dd0df37', firstDay, lastDay));
-  console.log(training.read('Ud7c64457bd6514f35958e78b1dd0df37', firstDay, lastDay));
+  console.log(workout.count());
+  console.log(workout.count('Ud7c64457bd6514f35958e78b1dd0df37', firstDay, lastDay));
+  console.log(workout.read('Ud7c64457bd6514f35958e78b1dd0df37', firstDay, lastDay));
 }
 
 function testIsValidReservationDatetime() {
