@@ -1,8 +1,8 @@
 function doPost(e) {
-  console.log(e);
+
   var contents = JSON.parse(e.postData.contents);
   var events = contents.events;
-  
+  console.log(contents);
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
     var replyToken = event.replyToken;
