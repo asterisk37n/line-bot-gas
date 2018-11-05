@@ -146,7 +146,6 @@ function generateMessageForCreateReservationByFlex() {
   });
 
   var buttons = unoccupied.map(function(datetime) {
-
     return {
       type: "button",
       style: "link",
@@ -248,36 +247,54 @@ function generateMessageForReadReservation(event, getProfile, CHANNEL_ACCESS_TOK
 
 function generateMessageForDeleteReservation(event) {
   var userId = event.source.userId;
-  var allReservations = reservation.readReservation(userId, new Date());
-  reservations = allReservations.slice(-4, allReservations.length); // Line Message API allows up to four items
-  var actions = reservations.map(function(row) {
-    var timestamp = parseInt(row[1]);
-    return {
-      type: "postback",
-      label: new Date(timestamp).toJPString(),
-      data: JSON.stringify({
-        state: "RESERVATION_DELETE_CONFIRMATION",
-        userId: userId,
-        timestamp: timestamp
-      })
-    }
-  });
+  var reservations = reservation.readReservation(userId, new Date());
 
-  if (actions.length === 0) {
+  if (reservations.length === 0) {
     return {
       type: "text",
       text: '予約がありません.'
     };
   }
 
+  var actions = reservations.map(function(row) {
+    var timestamp = parseInt(row[1]);
+    return {
+      type: "button",
+      style: "link",
+      action: {
+        type: "postback",
+        label: new Date(timestamp).toJPString(),
+        displayText: new Date(timestamp).toJPString(),
+        data: JSON.stringify({
+          state: "RESERVATION_DELETE_CONFIRMATION",
+          userId: userId,
+          timestamp: timestamp
+        })
+      }
+    }
+  });
+
   return {
-    type: "template",
-    altText: "バディトレ出席キャンセル",
-    template: {
-      "type": "buttons",
-      "title": "バディトレ出席キャンセル",
-      "text": "該当する日付を選択してください.",
-      "actions": actions
+    type: "flex",
+    altText: "This is a Flex Message",
+    contents: {
+      type: "carousel",
+      contents: [{
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [{
+            type: "text",
+            text: "予約キャンセル"
+          }]
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: actions
+        }
+      }]
     }
   };
 }
