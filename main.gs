@@ -1,5 +1,4 @@
 function doPost(e) {
-
   var contents = JSON.parse(e.postData.contents);
   var events = contents.events;
   console.log(contents);
