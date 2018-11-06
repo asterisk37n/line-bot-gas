@@ -286,7 +286,7 @@ function generateMessageForDeleteReservation(event) {
           layout: "vertical",
           contents: [{
             type: "text",
-            text: "予約キャンセル"
+            text: "予約削除"
           }]
         },
         body: {
@@ -305,7 +305,7 @@ function generateMessageForDeleteReservationConfirmation(event, getProfile, CHAN
   var response = reservation.deleteReservation(userId, data.timestamp);
   var text;
   if (response.status == 200) {
-    text = getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName + "さんの" + new Date(data.timestamp).toJPString() + "の予約をキャンセルしました.";
+    text = getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName + "さんの" + new Date(data.timestamp).toJPString() + "の予約を削除しました.";
   } else if (response.status == 404) {
     text = getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName + "さんの" + new Date(data.timestamp).toJPString() + "の予約は削除済みです.";
   }
@@ -420,10 +420,10 @@ function generateWelcomeMessage() {
       "名言は単に意識が高くなるだけで、特に深い意味はありません笑 我々なりのユーモアです。\n" +
       "毎月トップの方にはプロテインか\"燃え燃え\"、そして２位の方にはBCAAをプレゼントします。\n" +
       "\n" +
-      "＜キャンセルについて＞\n" +
+      "＜削除について＞\n" +
       "今後は枠当たり６人限定です。これまでテスト運用していたbotはしっかり運用してまいります。６人を超えた枠には予約ができなくなります。\n" +
-      "参加できなくなった場合は1時間前までを目安にキャンセルしてください。\n" +
-      "あまり無断キャンセルが多いとこちらも対応を考えないといけなくなります。\n" +
+      "参加できなくなった場合は1時間前までを目安に削除してください。\n" +
+      "あまり無断削除が多いとこちらも対応を考えないといけなくなります。\n" +
       "一方で、すぐに埋まるような現状が続きましたらクラス増設を検討いたします。一般的に皆様が夜これるであろう19−23時ごろまでは行うつもりです。"
   };
 }
