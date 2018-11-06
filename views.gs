@@ -44,7 +44,7 @@ function generateQuickReplyReservationMessage() {
 
   return {
     type: "text",
-    text: "予約メニューを選んでください. 予約は日, 月, 木曜日の19:00, 20:00, 21:00が可能です.",
+    text: "予約メニューを表示します.",
     quickReply: {
       items: [{
           type: "action",
@@ -322,7 +322,7 @@ function generateMessageForDeleteReservationConfirmation(event, getProfile, CHAN
 function generateQuickReplyWorkoutMessage() {
   return {
     type: "text",
-    text: "筋トレのメニューを選んでください",
+    text: "筋トレのメニューを表示します",
     quickReply: {
       items: [{
           type: "action",
