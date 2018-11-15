@@ -51,7 +51,7 @@ function generateQuickReplyReservationMessage() {
           imageUrl: "https://upload.wikimedia.org/wikipedia/en/8/86/Modern-ftn-pen-cursive.jpg",
           action: {
             type: "postback",
-            label: "新規予約(選択式)",
+            label: "新規予約",
             displayText: "新規予約",
             data: JSON.stringify({
               state: "RESERVATION_CREATE"
@@ -180,16 +180,11 @@ function generateMessageForConfirmReservation(event) {
     // event.postback.params.datetime is in format like "2018-11-05T21:00"
     var reservationDatetime = new Date(event.postback.params.datetime);
     var reservationTimestamp = reservationDatetime.getTime();
-
-    //TODO: should be removed as this is a temporally analytics line
-    SpreadsheetApp.getActive().getSheetByName('datetimepicker').appendRow([getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName, reservationDatetime.toString()])
   } else if (event.postback.hasOwnProperty("data")) {
     // postback
     var data = JSON.parse(event.postback.data);
     var reservationTimestamp = data.timestamp;
     var reservationDatetime = new Date(reservationTimestamp);
-    //TODO: should be removed as this is a temporally analytics line
-    SpreadsheetApp.getActive().getSheetByName('flex').appendRow([getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName, reservationDatetime.toString()])
   }
   var counted = reservation.countReservation(new Date(), null);
 
