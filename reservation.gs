@@ -18,7 +18,7 @@ var reservation = {
     }
     return {
       status: 201,
-      sheet: this.sheet.appendRow([userId, datetime.getTime(), datetime.toString()])
+      sheet: this.sheet.appendRow([userId, datetime.getTime(), datetime.toString(), getProfile(userId, CHANNEL_ACCESS_TOKEN).displayName])
     };
   },
 
