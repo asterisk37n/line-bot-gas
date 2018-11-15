@@ -50,24 +50,9 @@ function generateQuickReplyReservationMessage() {
           type: "action",
           imageUrl: "https://upload.wikimedia.org/wikipedia/en/8/86/Modern-ftn-pen-cursive.jpg",
           action: {
-            type: "datetimepicker",
-            label: "新規予約(Picker)",
-            data: JSON.stringify({
-              state: "RESERVATION_CREATE_CONFIRMATION"
-            }),
-            mode: "datetime",
-            min: initialDatetimeString,
-            initial: initialDatetimeString,
-            max: maxDatetimeString
-          }
-        },
-        {
-          type: "action",
-          imageUrl: "https://upload.wikimedia.org/wikipedia/en/8/86/Modern-ftn-pen-cursive.jpg",
-          action: {
             type: "postback",
             label: "新規予約(選択式)",
-            displayText: "新規予約(選択式)",
+            displayText: "新規予約",
             data: JSON.stringify({
               state: "RESERVATION_CREATE"
             })
