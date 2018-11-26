@@ -1,5 +1,5 @@
 function isValidReservationDatetime(datetime) {
-  // Only allows Monday, Thursday, Sunday and 19:00, 20:00, 21:00 i.e. nine hours a week.
+  // Only allows Monday, Thursday, Sunday and 19:00, 20:00, 21:00, 22:00
   var day = datetime.getDay();
   var hour = datetime.getHours();
   var minute = datetime.getMinutes();
@@ -8,7 +8,7 @@ function isValidReservationDatetime(datetime) {
     return false;
   }
 
-  if ((hour !== 19) && (hour !== 20) && (hour !== 21)) {
+  if ((hour !== 19) && (hour !== 20) && (hour !== 21) && (hour !== 22)) {
     return false;
   }
   
